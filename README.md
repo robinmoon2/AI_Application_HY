@@ -1,18 +1,31 @@
-# Predict good habits/environnment to success at an exam
+# 🎓 Predict Good Habits & Environment for Success at Exams
 
-## Team
+## 👥 Team
 
- | Name | School | mail |
-| ----------- | ----------- | ----------- | 
-| Theo hardy | Esilv engineering school |theo.hardy@edu.devinci.fr|
-| Gael Le mouel | Esilv engineering school | gael.lemouel@gmail.com|
-| Robin L'hyver | Esilv engineering school | robinlhyver@gmail.com |
+| Name             | School                   | Email                        |
+|------------------|--------------------------|------------------------------|
+| **Théo Hardy**    | Esilv Engineering School | theo.hardy@edu.devinci.fr     |
+| **Gael Le Mouel** | Esilv Engineering School | gael.lemouel@gmail.com        |
+| **Robin L'hyver** | Esilv Engineering School | robinlhyver@gmail.com         |
 
-## Data Set
+---
 
-[Data Set (Kaggle)](https://www.kaggle.com/datasets/lainguyn123/student-performance-factors/data)
+## 📊 Data Set
 
-## Project Overview
-This project investigates the factors that influence student performance, focusing not only on academic but also on personal and lifestyle variables. Using machine learning techniques, we aim to predict student grades and understand the external factors that contribute to success.
+[![Data Set (Kaggle)](https://img.shields.io/badge/Data%20Set-Kaggle-blue?style=flat-square)](https://www.kaggle.com/datasets/lainguyn123/student-performance-factors/data)
 
-Our objective is to develop knowledge on how artificial intelligence works in analyzing these factors and to apply this knowledge to improve our own study habits. As students, we are particularly interested in identifying which areas (both academic and personal) have the greatest impact on performance, providing insights that go beyond the classroom to include aspects like sleep, physical activity, and peer influence.
+---
+
+## 🔍 Project Overview
+
+This project aims to investigate the factors that influence **student performance**, focusing on both academic and personal life variables. Using cutting-edge **machine learning** techniques, we aim to:
+
+- 🧠 Predict **student grades** based on various factors.
+- 📈 Understand the **external influences** that contribute to academic success.
+- 💡 Provide insights into **improving study habits** for better performance.
+
+### Why This Project? 🎯
+
+As students ourselves, we're particularly concerned with identifying which factors—whether academic or personal—have the **greatest impact** on performance. By exploring influences such as **hours of sleep**, **physical activity**, and **peer interactions**, we hope to uncover patterns that go beyond the classroom and provide valuable advice for a more successful learning experience.
+
+---
