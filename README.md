@@ -18,14 +18,15 @@
 
 ## 🔍 Project Overview
 
-This project aims to investigate the factors that influence **student performance**, focusing on both academic and personal life variables. Using cutting-edge **machine learning** techniques, we aim to:
+This project explores the various factors that affect **student performance**, both academically and personally. Using **machine learning** techniques, we aim to:
 
-- 🧠 Predict **student grades** based on various factors.
-- 📈 Understand the **external influences** that contribute to academic success.
-- 💡 Provide insights into **improving study habits** for better performance.
+- 🧠 **Predict student grades** based on key factors from the dataset.
+- 📈 Assess the **external influences** on academic success, including personal habits and environment.
+- 🤖 Evaluate whether the **dataset** is reliable for making accurate predictions using machine learning models.
+- 💡 Provide insights on **improving study habits** to enhance academic performance.
 
 ### Why This Project? 🎯
 
-As students ourselves, we're particularly concerned with identifying which factors—whether academic or personal—have the **greatest impact** on performance. By exploring influences such as **hours of sleep**, **physical activity**, and **peer interactions**, we hope to uncover patterns that go beyond the classroom and provide valuable advice for a more successful learning experience.
+As students, we're particularly focused on identifying the most significant factors influencing academic success, both inside and outside the classroom. This project will help us understand how factors like **sleep**, **physical activity**, and **peer influence** contribute to better performance, and will also determine whether the dataset itself is a strong foundation for making reliable predictions.
 
 ---
