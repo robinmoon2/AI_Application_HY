@@ -24,9 +24,11 @@ This project explores the various factors that affect **student performance**, b
 - 📈 Assess the **external influences** on academic success, including personal habits and environment.
 - 🤖 Evaluate whether the **dataset** is reliable for making accurate predictions using machine learning models.
 - 💡 Provide insights on **improving study habits** to enhance academic performance.
+- - 🚀 **Improve our understanding of AI** and its applications in analyzing datasets.
+
 
 ### Why This Project? 🎯
 
-As students, we're particularly focused on identifying the most significant factors influencing academic success, both inside and outside the classroom. This project will help us understand how factors like **sleep**, **physical activity**, and **peer influence** contribute to better performance, and will also determine whether the dataset itself is a strong foundation for making reliable predictions.
+As students, we're focused on identifying the most significant factors influencing academic success, both inside and outside the classroom. This project helps us explore how factors like **sleep**, **physical activity**, and **peer influence** contribute to better performance. Additionally, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
 
 ---
