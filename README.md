@@ -5,7 +5,7 @@
 | Name             | School                   | Email                        |
 |------------------|--------------------------|------------------------------|
 | **Théo Hardy**    | ESILV Engineering School | theo.hardy@edu.devinci.fr     |
-| **Gael Le Mouel** | ESILV Engineering School | gael.lemouel@gmail.com        |
+| **Gaël Le Mouel** | ESILV Engineering School | gael.lemouel@gmail.com        |
 | **Robin L'hyver** | ESILV Engineering School | robinlhyver@gmail.com         |
 
 ---
