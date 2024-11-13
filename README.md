@@ -31,5 +31,5 @@ This project explores the various factors that affect **game outcomes**. Using *
 We are big fans of games and are interested in understanding the factors that contribute to winning. This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
 As computer science students, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
 
-> **Disclaimer:** Note: This project follows a previous one on student performance, which we found less engaging ([Student performance](Data Analysis)).
+> **Disclaimer:** This project follows a previous one on student performance, which we found less engaging ([Student performance](Data-Analysis)).
 ---
