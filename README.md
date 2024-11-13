@@ -1,4 +1,4 @@
-# 🎓 Predict Good Habits & Environment for Success at Exams
+# 🎮 Predict Game Winners
 
 ## 👥 Team
 
@@ -12,23 +12,24 @@
 
 ## 📊 Data Set
 
-[![Data Set (Kaggle)](https://img.shields.io/badge/Data%20Set-Kaggle-blue?style=flat-square)](https://www.kaggle.com/datasets/lainguyn123/student-performance-factors/data)
+[![Data Set (Kaggle)](https://img.shields.io/badge/Data%20Set-Kaggle-blue?style=flat-square)](https://www.kaggle.com/datasets/datasnaek/chess/data)
 
 ---
 
 ## 🔍 Project Overview
 
-This project explores the various factors that affect **student performance**, both academically and personally. Using **machine learning** techniques, we aim to:
+This project explores the various factors that affect **game outcomes**. Using **machine learning** techniques, we aim to:
 
-- 🧠 **Predict student grades** based on key factors from the dataset.
-- 📈 Assess the **external influences** on academic success, including personal habits and environment.
+- 🏆 **Predict the winner** of a game based on key factors from the dataset.
+- 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
 - 🤖 Evaluate whether the **dataset** is reliable for making accurate predictions using machine learning models.
-- 💡 Provide insights on **improving study habits** to enhance academic performance.
-- 🚀 **Improve our understanding of AI** and its applications in analyzing datasets.
-
+- 💡 Provide insights on **improving game strategies** to enhance performance.
+- 🚀 **Improve our understanding of AI** and its applications in analyzing game data.
 
 ### Why This Project? 🎯
 
-As students, we're focused on identifying the most significant factors influencing academic success, both inside and outside the classroom. This project helps us explore how factors like **sleep**, **physical activity**, and **peer influence** contribute to better performance. Additionally, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
+We are big fans of games and are interested in understanding the factors that contribute to winning. This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
+As computer science students, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
 
+> **Disclaimer:** Note: This project follows a previous one on student performance, which we found less engaging ([Student performance](Data Analysis)).
 ---
