@@ -33,3 +33,7 @@ As computer science students, we aim to **enhance our knowledge of artificial in
 
 > **Disclaimer:** This project follows a previous one on student performance, which we found less engaging ([Student performance](Data%20Analysis)).
 ---
+
+## Bibliography
+- ([Complete guide to encoding categorical features](https://kantschants.com/complete-guide-to-encoding-categorical-features))
+ 
