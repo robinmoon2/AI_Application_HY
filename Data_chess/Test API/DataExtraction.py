@@ -2,8 +2,9 @@ import re
 import os
 import chess.pgn
 import pandas as pd
+import time
 
-NUMBER_OF_GAMES = 100000
+NUMBER_OF_GAMES = 10000
 
 # Function to determine the winner
 def get_winner(result):
@@ -31,7 +32,7 @@ pgn_directory = 'Lichess Elite Database/Lichess Elite Database/'
 
 row = 0
 
-# Get a list of PGN files sorted by name
+# Get a list of PGN files sorted by dates
 pgn_files = sorted(
     [os.path.join(pgn_directory, f) for f in os.listdir(pgn_directory) if f.endswith('.pgn')],
     key=lambda x: os.path.basename(x), reverse= True
