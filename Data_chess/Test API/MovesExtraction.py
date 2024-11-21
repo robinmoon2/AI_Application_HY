@@ -28,8 +28,10 @@ pgn_files = sorted(
     key=lambda x: os.path.basename(x), reverse= True
 )
 
+start_time = time.time()
 # Process the PGN file
 for pgn_file_path in pgn_files:
+    file_start_time = time.time()
     with open(pgn_file_path) as pgn_file:
         while True and row < NUMBER_OF_GAMES:
             game = chess.pgn.read_game(pgn_file)
@@ -54,6 +56,13 @@ for pgn_file_path in pgn_files:
                 'moves': moves,
                 'fen': board.fen()
             })
+
+            if row % 10000 == 0:
+                elapsed_time = time.time() - start_time
+                print(f"Processed {row} games in {elapsed_time:.2f} seconds")
+
+    file_elapsed_time = time.time() - file_start_time
+    print(f"Processed file {pgn_file_path} in {file_elapsed_time:.2f} seconds")
 
 # Convert data to a pandas DataFrame
 df = pd.DataFrame(data)
