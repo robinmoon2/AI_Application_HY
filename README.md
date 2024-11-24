@@ -1,4 +1,5 @@
 # 🎮 Predict Game Winners
+> **Disclaimer:** This project follows a previous one on student performance, which we found less engaging ([Student performance](Data%20Analysis)).
 
 ## 👥 Team
 
@@ -67,7 +68,31 @@ This project explores the various factors that affect **game outcomes**. Using *
 We are big fans of games and are interested in understanding the factors that contribute to winning. This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
 As computer science students, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
 
-> **Disclaimer:** This project follows a previous one on student performance, which we found less engaging ([Student performance](Data%20Analysis)).
+## 🔬 Methodology
+### Data Preprocessing
+TBW
+
+### Existing Models
+
+Chess is very famous in the AI community, and many models have been developed to predict the best move in a given position such as **AlphaZero** and **Stockfish**. To help us develop our own, we will use these models. (see more : [Chess Engine](Chess_Project/Chess%20Engine))
+
+#### AlphaZero
+
+AlphaZero is a computer program developed by Google DeepMind in 2017. It uses the same reinforcement learning techniques as AlphaGo Zero, but it is also trained on chess. AlphaZero is a general-purpose algorithm that can learn to play other games as well. It uses a deep neural network to evaluate positions and select moves.
+
+#### Stockfish
+
+Stockfish is a free and open-source chess engine developed by Tord Romstad, Marco Costalba, and Joona Kiiski. It is one of the strongest chess engines in the world. Stockfish uses alpha-beta pruning and other techniques to evaluate positions and select moves. The evaluation function is based on material balance, piece mobility, pawn structure, king safety, and other factors and is entirely handcrafted.
+
+#### Which one is better ?
+
+TBW
+
+## 📈 Data Analysis
+TBW
+
+##
+
 ---
 
 ## References
