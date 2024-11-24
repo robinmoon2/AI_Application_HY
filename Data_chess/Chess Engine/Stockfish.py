@@ -20,4 +20,5 @@ with chess.engine.SimpleEngine.popen_uci(stockfish_path) as engine:
 
     # Optionally, print the evaluation score
     info = engine.analyse(board, chess.engine.Limit(time=time_limit))
+    print(info)
     print("Evaluation score:", info["score"])
