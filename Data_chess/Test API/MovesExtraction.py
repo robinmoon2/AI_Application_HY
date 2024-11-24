@@ -4,8 +4,19 @@ import chess.pgn
 import pandas as pd
 import time
 
-NUMBER_OF_GAMES = 10000
+NUMBER_OF_GAMES = 100
 MOVE_NO = 10
+
+# Function to determine the winner
+def get_winner(result):
+    if result == "1-0":
+        return 1  # White wins
+    elif result == "0-1":
+        return -1  # Black wins
+    elif result == "1/2-1/2":
+        return 0  # Draw
+    else:
+        return None  # Unknown result
 
 # Function to extract game ID from Lichess URL
 def extract_game_id(lichess_url):
@@ -43,18 +54,21 @@ for pgn_file_path in pgn_files:
             game_id = extract_game_id(headers.get('Site', ''))
             moves = ' '.join(str(move) for move in game.mainline_moves())
 
-            # Iterate
+            # Iterate the moves to the board
             board = game.board()
             for move in game.mainline_moves():
                 board.push(move)
                 if board.fullmove_number == MOVE_NO:
                     break
 
+            winner = get_winner(headers.get('Result', ''))
+
             # Add to data list
             data.append({
                 'id': game_id,
                 'moves': moves,
-                'fen': board.fen()
+                f'{MOVE_NO}_fen': board.fen(),
+                'winner': winner
             })
 
             if row % 10000 == 0:
@@ -68,7 +82,7 @@ for pgn_file_path in pgn_files:
 df = pd.DataFrame(data)
 
 # Save to CSV
-output_csv_path = 'elite_chess_games_moves.csv'
+output_csv_path = '../Data/elite_chess_games_moves.csv'
 df.to_csv(output_csv_path, index=False)
 
 print(f'Data saved to {output_csv_path}')

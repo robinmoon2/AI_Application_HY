@@ -3,3 +3,5 @@ Data Analysis/.ipynb_checkpoints
 /.venv
 /.idea
 *.pgn
+/Data_chess/Data
+Data_chess/Chess Engine/LC0/t3-512x15x16h-distill-swa-2767500.pb.gz
