@@ -1,9 +1,0 @@
-python-chess
-chess
-pandas
-numpy
-matplotlib
-seaborn
-scikit-learn
-tensorflow
-keras

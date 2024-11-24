@@ -1,7 +1,8 @@
 
-Data Analysis/.ipynb_checkpoints
+Old_Project/.ipynb_checkpoints
 /.venv
 /.idea
 *.pgn
-/Data_chess/Data
-Data_chess/Chess Engine/LC0/t3-512x15x16h-distill-swa-2767500.pb.gz
+# Specific Network Model for LC0 Chess Engine. See https://lczero.org/play/networks/bestnets/
+Chess_Project/Chess Engine/LC0/t3-512x15x16h-distill-swa-2767500.pb.gz
+/Chess_Project/CSV_Output
