@@ -49,6 +49,43 @@ Elo corresponds to the player's rating, which is a measure of the player's skill
 The high quality games in the database might help us to have a more accurate prediction.
 
 
+### Important columns : 
+
+#### Prepocessing :
+
+Before beginning the statistic analysis we need to make sure that the data is clean and ready to be used.
+
+So for this we erased the lines that had missing values. There was some games that were repeating themselves , so we erased them too to let only 1 left in the dataset.
+
+#### Turns : 
+
+This column shows us the number of turns in the game. It is a good indicator of the game length. This column will be useful for the project and for the learning model that we will use.
+
+![turns distribution](/images/turns_distribution.png)
+
+We can see a pin around 50 turns . This is normal because the average game length is around 40 turns. Then we have some extra values that are higher than 100 turns. 
+
+
+#### Ranking : 
+
+The rank of each player is important, it tells us the difference of level between 2 players and there knowledge of the game.
+
+We can see that the white and black rating are the same :
+
+| white_rating | black_rating | raking difference |
+|--------------|--------------|-------------------|
+![rating distribution](/images/white_rating.png)|![rating distribution](/images/black_rating.png)|![rating distrib](/images/rating_difference.png)
+
+We see that the ranking difference between the players is not important and we can assume that the players have the same levels.
+![correlation matrix all](/images/correlation_all.png)
+
+
+
+#### correlation matrix
+
+To help us with every features presents in the dataset. With this feature we can see the correlation between each features and the target variable.
+
+
 ---
 
 ## 🔍 Project Overview
