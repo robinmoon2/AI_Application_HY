@@ -11,6 +11,24 @@
 
 ---
 
+## 🔍 Project Overview
+
+This project explores the various factors that affect **game outcomes**. Using **machine learning** techniques, we aim to:
+
+- 🏆 **Predict the winner** of a game based on key factors from the dataset.
+- 🏅**Classify the best opening moves** to increase the chances of winning.
+- ❓**Identify Blunders or Critical Position** to detect the **turning points** of the game.
+- ♟️**Evaluate the best move** to make in a given position.
+- 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
+- 🤖 Evaluate whether the **dataset** is reliable for making accurate predictions using machine learning models.
+- 🚀 **Improve our understanding of AI** and its applications in analyzing game data.
+
+### Why This Project? 🎯
+
+We are big fans of games and are interested in understanding the factors that contribute to winning. This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
+As computer science students, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
+
+
 ## 📊 Data Set
 
 **Data Set used :**
@@ -18,10 +36,9 @@
 [![Kaggle Data Set (Kaggle)](https://img.shields.io/badge/Kaggle%20Data%20Set-Kaggle-blue?style=flat-square)](https://www.kaggle.com/datasets/datasnaek/chess/data)
 [![Elite Data Set (Nikonoel)](https://img.shields.io/badge/Elile%20Data%20Set-Nikonoel-blue?style=flat-square)](https://database.nikonoel.fr/)
 
-
 ### Data Set Description
 
-The Kaggle Data Set contains around **20,000 chess games** with the following columns:
+The Kaggle Data Set contains around **20,000 chess games** with the following features:
 - `id`: Game ID
 - `rated`: Whether the game is rated
 - `created_at`: Date and time the game was created
@@ -49,7 +66,7 @@ Elo corresponds to the player's rating, which is a measure of the player's skill
 The high quality games in the database might help us to have a more accurate prediction.
 
 
-### Important columns : 
+### Important Features : 
 
 #### Prepocessing :
 
@@ -59,9 +76,9 @@ So for this we erased the lines that had missing values. There was some games th
 
 #### Turns : 
 
-This column shows us the number of turns in the game. It is a good indicator of the game length. This column will be useful for the project and for the learning model that we will use.
+This feature shows us the number of turns in the game. It is a good indicator of the game length. This feature will be useful for the project and for the learning model that we will use.
 
-![turns distribution](/images/turns_distribution.png)
+![turns distribution](images/turns_distribution.png)
 
 We can see a pin around 50 turns . This is normal because the average game length is around 40 turns. Then we have some extra values that are higher than 100 turns. 
 
@@ -74,36 +91,20 @@ We can see that the white and black rating are the same :
 
 | white_rating | black_rating | raking difference |
 |--------------|--------------|-------------------|
-![rating distribution](/images/white_rating.png)|![rating distribution](/images/black_rating.png)|![rating distrib](/images/rating_difference.png)
+![rating distribution](images/white_rating.png)|![rating distribution](images/black_rating.png)|![rating distrib](images/rating_difference.png)
 
 We see that the ranking difference between the players is not important and we can assume that the players have the same levels.
-![correlation matrix all](/images/correlation_all.png)
-
 
 
 #### correlation matrix
 
 To help us with every features presents in the dataset. With this feature we can see the correlation between each features and the target variable.
+![correlation matrix all](images/correlation_all.png)
 
 
 ---
 
-## 🔍 Project Overview
 
-This project explores the various factors that affect **game outcomes**. Using **machine learning** techniques, we aim to:
-
-- 🏆 **Predict the winner** of a game based on key factors from the dataset.
-- 🏅**Classify the best opening moves** to increase the chances of winning.
-- ❓**Identify Blunders or Critical Position** to detect the **turning points** of the game.
-- ♟️**Evaluate the best move** to make in a given position.
-- 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
-- 🤖 Evaluate whether the **dataset** is reliable for making accurate predictions using machine learning models.
-- 🚀 **Improve our understanding of AI** and its applications in analyzing game data.
-
-### Why This Project? 🎯
-
-We are big fans of games and are interested in understanding the factors that contribute to winning. This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
-As computer science students, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
 
 ## 🔬 Methodology
 ### Data Preprocessing
