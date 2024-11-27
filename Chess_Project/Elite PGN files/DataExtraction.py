@@ -90,7 +90,7 @@ for pgn_file_path in pgn_files:
 df = pd.DataFrame(data)
 
 # Save to CSV
-output_csv_path = '../CSV_Output/elite_chess_games_moves.csv'
+output_csv_path = '../CSV_Output/elite_chess_games_features.csv'
 df.to_csv(output_csv_path, index=False)
 
 print(f'Data saved to {output_csv_path}')
