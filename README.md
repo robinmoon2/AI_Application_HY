@@ -11,46 +11,6 @@
 
 ---
 
-## 📊 Data Set
-
-**Data Set used :**
-
-[![Kaggle Data Set (Kaggle)](https://img.shields.io/badge/Kaggle%20Data%20Set-Kaggle-blue?style=flat-square)](https://www.kaggle.com/datasets/datasnaek/chess/data)
-[![Elite Data Set (Nikonoel)](https://img.shields.io/badge/Elile%20Data%20Set-Nikonoel-blue?style=flat-square)](https://database.nikonoel.fr/)
-
-
-### Data Set Description
-
-The Kaggle Data Set contains around **20,000 chess games** with the following columns:
-- `id`: Game ID
-- `rated`: Whether the game is rated
-- `created_at`: Date and time the game was created
-- `last_move_at`: Date and time of the last move
-- `turns`: Number of turns in the game
-- `victory_status`: Game outcome (mate, draw, resign, outoftime)
-- `winner`: Winner of the game (white, black, draw)
-- `increment_code`: Increment code ([time control](https://www.chess.com/terms/chess-time-controls))
-- `white_id`: White player ID
-- `white_rating`: White player rating
-- `black_id`: Black player ID
-- `black_rating`: Black player rating
-- `moves`: Moves in standard chess notation 
-- `opening_eco`: Opening code ([List](https://www.365chess.com/eco.php))
-- `opening_name`: Opening name
-- `opening_ply`: Number of opening moves
-
-The data set comes from the [Lichess](https://lichess.org/) website, which is a free online chess game platform.
-
-After analysing the data, we found that the Kaggle dataset do not contain enough observations.
-Lichess provides a database of **Every game played on Lichess** on its [webstie](https://database.lichess.org/).
-To decided to use the **Lichess Elite Database** which contains all the 2300 elo or more game datas. 
-Elo corresponds to the player's rating, which is a measure of the player's skill level. The higher the Elo, the better the player.
-2300 elo is the minimum rating to be considered a ***master*** in chess. 
-The high quality games in the database might help us to have a more accurate prediction.
-
-
----
-
 ## 🔍 Project Overview
 
 This project explores the various factors that affect **game outcomes**. Using **machine learning** techniques, we aim to:
@@ -60,7 +20,7 @@ This project explores the various factors that affect **game outcomes**. Using *
 - ❓**Identify Blunders or Critical Position** to detect the **turning points** of the game.
 - ♟️**Evaluate the best move** to make in a given position.
 - 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
-- 🤖 Evaluate whether the **dataset** is reliable for making accurate predictions using machine learning models.
+- 🤖 Evaluate whether the **dataset** and the **models** that we chose are reliable for making accurate predictions using machine learning models.
 - 🚀 **Improve our understanding of AI** and its applications in analyzing game data.
 
 ### Why This Project? 🎯
@@ -68,9 +28,84 @@ This project explores the various factors that affect **game outcomes**. Using *
 We are big fans of games and are interested in understanding the factors that contribute to winning. This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
 As computer science students, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
 
+
+## 📊 Data Set
+
+**Data Set used :**
+
+[![Kaggle Data Set (Kaggle)](https://img.shields.io/badge/Kaggle%20Data%20Set-Kaggle-blue?style=flat-square)](https://www.kaggle.com/datasets/datasnaek/chess/data)
+[![Elite Data Set (Nikonoel)](https://img.shields.io/badge/Elile%20Data%20Set-Nikonoel-blue?style=flat-square)](https://database.nikonoel.fr/)
+
+
+### Data Sets Description
+
+The Kaggle Data Set contains around **20,000 chess games** with the following features:
+- `id`: Game ID
+- `rated`: Whether the game is rated
+- `created_at`: Date and time the game was created
+- `last_move_at`: Date and time of the last move of the game
+- `turns`: Move number in the game
+- `victory_status`: Game outcome (mate, draw, resign, outoftime)
+- `winner`: Winner of the game (white, black, draw)
+- `increment_code`: Time control, first number is the time in minutes  per player and the second one is the number of second added to each player time for every moves ([Time control](https://www.chess.com/terms/chess-time-controls))
+- `white_id`: White player ID
+- `white_rating`: White player rating
+- `black_id`: Black player ID
+- `black_rating`: Black player rating
+- `moves`: Moves in standard chess notation 
+- `opening_eco`: Opening code ([Opening List](https://www.365chess.com/eco.php))
+- `opening_name`: Opening name
+- `opening_ply`: move number per opening
+
+The data set comes from the [Lichess](https://lichess.org/) website, which is a free online chess game platform.
+
+After analysing the data, we found that the Kaggle dataset do not contain enough data.
+Lichess provides a database of **Every game played on Lichess** on its [webstie](https://database.lichess.org/).
+We decided to use the **Lichess Elite Database** created by a user of the Lichess API. The data set contains all the 2300 elo or more game datas. 
+Elo corresponds to the player's rating, which is a measure of the player's skill level. The higher the Elo, the better the player.
+2300 elo is the minimum rating to be considered a ***master*** in chess. 
+The high quality games in the database might help us to have a more accurate prediction.
+
+
+### Important Features : 
+
+
+#### Turns : 
+
+This feature shows us the number of turns in the game. It is a good indicator of the game length. This feature will be useful for the project and for the learning model that we will use.
+
+![turns distribution](images/turns_distribution.png)
+
+We can see a pin around 50 turns . This is normal because the average game length is around 40 turns. Then we have some extra values that are higher than 100 turns. 
+
+
+#### Ranking : 
+
+The rank of each player is important, it tells us the difference of level between 2 players and there knowledge of the game.
+
+We can see that the white and black rating are the same :
+
+| white_rating | black_rating | raking difference |
+|--------------|--------------|-------------------|
+![rating distribution](images/white_rating.png)|![rating distribution](images/black_rating.png)|![rating distrib](images/rating_difference.png)
+
+We see that the ranking difference between the players is not important and we can assume that the players have the same levels.
+
+
+#### correlation matrix
+
+To help us with every features presents in the dataset. With this feature we can see the correlation between each features and the target variable.
+![correlation matrix all](images/correlation_all.png)
+
+---
+
 ## 🔬 Methodology
 ### Data Preprocessing
-TBW
+
+Before beginning the statistic analysis we need to make sure that the data is clean and ready to be used.
+
+So for this we erased the lines that had missing values. There were some games that were repeating themselves , so we erased them too to let only 1 left in the dataset.
+
 
 ### Existing Models
 
@@ -91,19 +126,6 @@ TBW
 ## 📈 Data Analysis
 TBW
 
-## Predicting the winner and the victory status of a game.
-
-To predict the winner and victory status we tried three strategies in order to see which one had the best accuracy. To do the prediction we used at must 5 out of 16 features : the number of turns in the game, the players ratings, the opening code used and the number of play of this opening. We chose the Random Forest algorithm because it is the best supervised classification algorithm in our opinion.
-The three stratgies were the following : 
-- prediction with opening code feature encoded with binary encoding, 
-- prediction with opening code feature encoded with label encoding, 
-- prediction with only the players ratings and the number of turns in the game.
-
-In the first strategy we used Binary encoding to use the opening code feature. This type of encoding allow us to reduce the dimensionality compare to a one-hot encoding but still use a powerful encoding like the on-hot one. We found a 36% accuracy of the Random Forest algorithm.
-For the second strategy we used a Label encoding this time of the opening feature. It does not increase the dimensionality of our dataset but it will create a little bias in the algorithm as the label encoding is used for ordered feature and the opening code is not one of this kind. The random forest algorithm give us a 37% accuracy.
-The last strategy was to reduce the number of feature to only the one which are really correlated to the winner and victory status of the game. We found a 35% accuracy.
-
-In conlusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily.
 
 ---
 
