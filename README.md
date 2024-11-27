@@ -20,7 +20,7 @@ This project explores the various factors that affect **game outcomes**. Using *
 - ❓**Identify Blunders or Critical Position** to detect the **turning points** of the game.
 - ♟️**Evaluate the best move** to make in a given position.
 - 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
-- 🤖 Evaluate whether the **dataset** is reliable for making accurate predictions using machine learning models.
+- 🤖 Evaluate whether the **dataset** and the **models** that we chose are reliable for making accurate predictions using machine learning models.
 - 🚀 **Improve our understanding of AI** and its applications in analyzing game data.
 
 ### Why This Project? 🎯
@@ -36,31 +36,32 @@ As computer science students, we aim to **enhance our knowledge of artificial in
 [![Kaggle Data Set (Kaggle)](https://img.shields.io/badge/Kaggle%20Data%20Set-Kaggle-blue?style=flat-square)](https://www.kaggle.com/datasets/datasnaek/chess/data)
 [![Elite Data Set (Nikonoel)](https://img.shields.io/badge/Elile%20Data%20Set-Nikonoel-blue?style=flat-square)](https://database.nikonoel.fr/)
 
-### Data Set Description
+
+### Data Sets Description
 
 The Kaggle Data Set contains around **20,000 chess games** with the following features:
 - `id`: Game ID
 - `rated`: Whether the game is rated
 - `created_at`: Date and time the game was created
-- `last_move_at`: Date and time of the last move
-- `turns`: Number of turns in the game
+- `last_move_at`: Date and time of the last move of the game
+- `turns`: Move number in the game
 - `victory_status`: Game outcome (mate, draw, resign, outoftime)
 - `winner`: Winner of the game (white, black, draw)
-- `increment_code`: Increment code ([time control](https://www.chess.com/terms/chess-time-controls))
+- `increment_code`: Time control, first number is the time in minutes  per player and the second one is the number of second added to each player time for every moves ([Time control](https://www.chess.com/terms/chess-time-controls))
 - `white_id`: White player ID
 - `white_rating`: White player rating
 - `black_id`: Black player ID
 - `black_rating`: Black player rating
 - `moves`: Moves in standard chess notation 
-- `opening_eco`: Opening code ([List](https://www.365chess.com/eco.php))
+- `opening_eco`: Opening code ([Opening List](https://www.365chess.com/eco.php))
 - `opening_name`: Opening name
-- `opening_ply`: Number of opening moves
+- `opening_ply`: move number per opening
 
 The data set comes from the [Lichess](https://lichess.org/) website, which is a free online chess game platform.
 
-After analysing the data, we found that the Kaggle dataset do not contain enough observations.
+After analysing the data, we found that the Kaggle dataset do not contain enough data.
 Lichess provides a database of **Every game played on Lichess** on its [webstie](https://database.lichess.org/).
-To decided to use the **Lichess Elite Database** which contains all the 2300 elo or more game datas. 
+We decided to use the **Lichess Elite Database** created by a user of the Lichess API. The data set contains all the 2300 elo or more game datas. 
 Elo corresponds to the player's rating, which is a measure of the player's skill level. The higher the Elo, the better the player.
 2300 elo is the minimum rating to be considered a ***master*** in chess. 
 The high quality games in the database might help us to have a more accurate prediction.
@@ -68,11 +69,6 @@ The high quality games in the database might help us to have a more accurate pre
 
 ### Important Features : 
 
-#### Prepocessing :
-
-Before beginning the statistic analysis we need to make sure that the data is clean and ready to be used.
-
-So for this we erased the lines that had missing values. There was some games that were repeating themselves , so we erased them too to let only 1 left in the dataset.
 
 #### Turns : 
 
@@ -101,14 +97,15 @@ We see that the ranking difference between the players is not important and we c
 To help us with every features presents in the dataset. With this feature we can see the correlation between each features and the target variable.
 ![correlation matrix all](images/correlation_all.png)
 
-
 ---
-
-
 
 ## 🔬 Methodology
 ### Data Preprocessing
-TBW
+
+Before beginning the statistic analysis we need to make sure that the data is clean and ready to be used.
+
+So for this we erased the lines that had missing values. There were some games that were repeating themselves , so we erased them too to let only 1 left in the dataset.
+
 
 ### Existing Models
 
@@ -129,7 +126,6 @@ TBW
 ## 📈 Data Analysis
 TBW
 
-##
 
 ---
 
