@@ -4,7 +4,7 @@ import chess.pgn
 import pandas as pd
 import time
 
-NUMBER_OF_GAMES = 1000000
+NUMBER_OF_GAMES = 10000000
 
 # Function to determine the winner
 def get_winner(result):
@@ -62,6 +62,7 @@ for pgn_file_path in pgn_files:
             turns = sum(1 for _ in game.mainline_moves())  # Number of moves
             lichess_url = headers.get('LichessURL', '')
             game_id = extract_game_id(lichess_url)
+
             victory_status = headers.get('Termination', '')
 
             # Add to data list
@@ -79,7 +80,7 @@ for pgn_file_path in pgn_files:
                 'winner': get_winner(result),
             })
 
-            if row % 10000 == 0:
+            if row % (NUMBER_OF_GAMES//100) == 0:
                 elapsed_time = time.time() - start_time
                 print(f"Processed {row} games in {elapsed_time:.2f} seconds")
 
@@ -89,7 +90,7 @@ for pgn_file_path in pgn_files:
 df = pd.DataFrame(data)
 
 # Save to CSV
-output_csv_path = 'elite_chess_games_features.csv'
+output_csv_path = '../CSV_Output/elite_chess_games_moves.csv'
 df.to_csv(output_csv_path, index=False)
 
 print(f'Data saved to {output_csv_path}')
