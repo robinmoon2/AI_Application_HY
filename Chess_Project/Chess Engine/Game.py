@@ -4,30 +4,31 @@ import chess.pgn
 import sys
 
 
-def play_games(number_of_games, time_limit, engine1, engine2, output_pgn_file, live = False):
+def play_games(number_of_games, time_limit, engine1_path, engine2_path, output_pgn_file, live = False):
     time_limit = chess.engine.Limit(time=time_limit)  # 0.5 seconds per move
 
-    lc0_path = "LC0/lc0.exe"
-    stockfish_path = "stockfish/stockfish-windows-x86-64-avx2.exe"
-
     # Initialize engines
-    lc0_engine = chess.engine.SimpleEngine.popen_uci(engine1)
-    stockfish_engine = chess.engine.SimpleEngine.popen_uci(engine2)
+    engine1 = chess.engine.SimpleEngine.popen_uci(engine1_path)
+    engine2 = chess.engine.SimpleEngine.popen_uci(engine2_path)
+    engine1_name = engine1_path.split("/")[-1].split(".")[0]
+    engine2_name = engine2_path.split("/")[-1].split(".")[0]
 
     # Create a PGN game collection
     pgn_collection = []
 
     for game_number in range(1, number_of_games + 1):
         # Alternate colors
-        white_engine = lc0_engine if game_number % 2 != 0 else stockfish_engine
-        black_engine = stockfish_engine if game_number % 2 != 0 else lc0_engine
+        white_engine = engine1 if game_number % 2 != 0 else engine2
+        black_engine = engine2 if game_number % 2 != 0 else engine1
+
+
 
         # Create a new chess game
         board = chess.Board()
         game = chess.pgn.Game()
         game.headers["Event"] = f"Lc0 vs Stockfish - Game {game_number}"
-        game.headers["White"] = "Lc0" if white_engine == lc0_engine else "Stockfish"
-        game.headers["Black"] = "Stockfish" if black_engine == stockfish_engine else "Lc0"
+        game.headers["White"] = engine1_name if white_engine == engine1 else engine2_name
+        game.headers["Black"] = engine2_name if black_engine == engine2 else engine1_name
         # Play the game
         node = game
         if live:
@@ -67,8 +68,8 @@ def play_games(number_of_games, time_limit, engine1, engine2, output_pgn_file, l
     print(f"All {number_of_games} games saved to {output_pgn_file}")
 
     # Close engines
-    lc0_engine.quit()
-    stockfish_engine.quit()
+    engine1.quit()
+    engine2.quit()
 
 if __name__ == "__main__":
     args = sys.argv
