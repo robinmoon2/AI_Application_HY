@@ -3,15 +3,29 @@ import chess.engine
 import chess.pgn
 import sys
 
-
 def play_games(number_of_games, time_limit, engine1_path, engine2_path, output_pgn_file, live = False):
-    time_limit = chess.engine.Limit(time=time_limit)  # 0.5 seconds per move
+    if sys.platform.startswith("darwin"):
+        print("MacOS is not supported")
+        return
+    
+
+    time_limit = chess.engine.Limit(time=time_limit)
 
     # Initialize engines
-    engine1 = chess.engine.SimpleEngine.popen_uci(engine1_path)
-    engine2 = chess.engine.SimpleEngine.popen_uci(engine2_path)
-    engine1_name = engine1_path.split("/")[-1].split(".")[0]
-    engine2_name = engine2_path.split("/")[-1].split(".")[0]
+
+    if sys.platform.startswith("win32"):
+        engine1_name = engine1_path.split("/")[0]
+        engine2_name = engine2_path.split("/")[0]
+
+        engine1 = chess.engine.SimpleEngine.popen_uci(engine1_path)
+        engine2 = chess.engine.SimpleEngine.popen_uci(engine2_path)
+    else:
+        print("Only Stockfish is avaible on your system")
+        engine1_name = "Stockfish"
+        engine2_name = "Stockfish"
+
+        engine1 = chess.engine.SimpleEngine.popen_uci('stockfish/stockfish-ubuntu-x86-64-avx2')
+        engine2 = chess.engine.SimpleEngine.popen_uci('stockfish/stockfish-ubuntu-x86-64-avx2')
 
     # Create a PGN game collection
     pgn_collection = []
@@ -21,12 +35,10 @@ def play_games(number_of_games, time_limit, engine1_path, engine2_path, output_p
         white_engine = engine1 if game_number % 2 != 0 else engine2
         black_engine = engine2 if game_number % 2 != 0 else engine1
 
-
-
         # Create a new chess game
         board = chess.Board()
         game = chess.pgn.Game()
-        game.headers["Event"] = f"Lc0 vs Stockfish - Game {game_number}"
+        game.headers["Event"] = f"{engine1_name} vs {engine2_name} - Game {game_number}"
         game.headers["White"] = engine1_name if white_engine == engine1 else engine2_name
         game.headers["Black"] = engine2_name if black_engine == engine2 else engine1_name
         # Play the game
@@ -74,12 +86,15 @@ def play_games(number_of_games, time_limit, engine1_path, engine2_path, output_p
 if __name__ == "__main__":
     args = sys.argv
 
+
     lc0_path = "LC0/lc0.exe"
     stockfish_path = "stockfish/stockfish-windows-x86-64-avx2.exe"
-    output_pgn_file = "Data/lc0_vs_stockfish.pgn"
+    if sys.platform.startswith("linux"):
+        stockfish_path += "stockfish/stockfish-ubuntu-x86-64-avx2"
+    output_pgn_file = "Data/ModelVsModelGames.pgn"
 
-    number_of_games = 5
-    time_limit = 1.0
+    number_of_games = 2
+    time_limit = 0.2
     engine1_path = stockfish_path
     engine2_path = lc0_path
 
