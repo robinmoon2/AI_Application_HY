@@ -4,7 +4,7 @@ import chess.pgn
 import pandas as pd
 import time
 
-NUMBER_OF_GAMES = 100
+NUMBER_OF_GAMES = 100000
 MOVE_NO = 10
 
 # Function to determine the winner
@@ -53,13 +53,7 @@ for pgn_file_path in pgn_files:
             headers = game.headers
             game_id = extract_game_id(headers.get('Site', ''))
             moves = ' '.join(str(move) for move in game.mainline_moves())
-
-            # Iterate the moves to the board
-            board = game.board()
-            for move in game.mainline_moves():
-                board.push(move)
-                if board.fullmove_number == MOVE_NO:
-                    break
+            opening_eco = headers.get('ECO', '')
 
             winner = get_winner(headers.get('Result', ''))
 
@@ -67,11 +61,11 @@ for pgn_file_path in pgn_files:
             data.append({
                 'id': game_id,
                 'moves': moves,
-                f'{MOVE_NO}_fen': board.fen(),
+                'opening_eco': opening_eco,
                 'winner': winner
             })
 
-            if row % 10000 == 0:
+            if row % (NUMBER_OF_GAMES//100) == 0:
                 elapsed_time = time.time() - start_time
                 print(f"Processed {row} games in {elapsed_time:.2f} seconds")
 
