@@ -25,7 +25,7 @@ import seaborn as sns
 def forest_test(X, y):
     X_Train, X_Test, Y_Train, Y_Test = train_test_split(X, y, test_size=0.20, random_state=42)
     start = time.process_time()
-    trained_forest = RandomForestClassifier(random_state=42).fit(X_Train, Y_Train)
+    trained_forest = RandomForestClassifier(class_weight="balanced", random_state=42).fit(X_Train, Y_Train)
     print(f"Training time: {time.process_time() - start:.2f} seconds")
 
     prediction_forest = trained_forest.predict(X_Test)
@@ -171,7 +171,7 @@ def get_eval_csv(row_number=10):
     return df
 
 def get_trends_csv():
-    df = pd.read_csv('Data/elite_chess_games_evaluations.csv')
+    df = pd.read_csv('Data/elite_chess_games_evaluations_1k_rows.csv')
     df = extract_trends(df)
     df.to_csv('Data/elite_chess_games_trends.csv', index=False)
     print("done\n Data saved to 'Data/elite_chess_games_trends.csv'")
@@ -224,4 +224,12 @@ if __name__ == "__main__":
     # Gradient Boosting Model
     print("Gradient Boosting Model without draws : ")
     gradient_boosting_test(X, y)
+
+    # Support Vector Machine Model
+    print("Support Vector Machine Model without draws : ")
+    support_vector_machine_test(X, y)
+
+
+
+
 
