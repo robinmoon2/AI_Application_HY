@@ -1,4 +1,4 @@
-# 🎮 Predict Game Winners
+# 🎮 Chess and AI
 > **Disclaimer:** This project follows a previous one on student performance, which we found less engaging ([Student performance](Data%20Analysis)).
 
 ## 👥 Team
@@ -11,17 +11,16 @@
 
 ---
 
-## 🔍 Project Overview
+## 💻 Project Overview
 
 This project explores the various factors that affect **game outcomes**. Using **machine learning** techniques, we aim to:
 
 - 🏆 **Predict the winner** of a game based on key factors from the dataset.
 - 🏅**Classify the best opening moves** to increase the chances of winning.
 - ❓**Identify Blunders or Critical Position** to detect the **turning points** of the game.
-- ♟️**Evaluate the best move** to make in a given position.
 - 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
 - 🤖 Evaluate whether the **dataset** and the **models** that we chose are reliable for making accurate predictions using machine learning models.
-- 🚀 **Improve our understanding of AI** and its applications in analyzing game data.
+- 🚀 **Improve our understanding of AI** and its applications in analyzing chess data.
 
 ### Why This Project? 🎯
 
@@ -91,9 +90,16 @@ The Elite Data Set contains a lot of games in the format of **PGN** [Portable Ga
 
 A big part of the features provided in the PGN files do not interest us for our analysis.
 **We will mostly focus on the features that we found in the Kaggle dataset.**
-To use the data set, we first converted the data from the PGN files to a new dataset in CSV format. To do this, we used the python programs in the [Elite PGN files](Chess_Project/Elite%20PGN%20files) folder.
+To use the data set, we first converted the data from the PGN files to a new dataset in CSV format.
+To do this, we used the python programs in the [Elite PGN files](Chess_Project/Elite%20PGN%20files) folder.
 The programs use the [python-chess](https://python-chess.readthedocs.io/en/latest/) library that provides tools to easily read and write PGN files.
-As the programs were taking a lot of time to convert the data, we decided to use samples of the data to test our models. We first extracted 10000 games from the PGN files to test our models and then extracted 1,000,000 games.
+One of the programs is specifically designed to extract the game move list alongside the outcome of the game from the PGN files. 
+The other extracts other features such as the *players' ratings*, the *opening code*, the *turn number* and the *victory status*.
+As the programs were taking a lot of time to convert the data, we decided to use samples of the data to test our models.
+We first extracted 10000 games from the PGN files to test our models and then extracted 1,000,000 games.
+
+- 1M row CSV sample extracted from the PGN files : [1M Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_features-1M_Games.zip)
+- 100k row move list CSV sample extracted from the PGN files : [100k Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_moves.csv)
 
 
 ---
@@ -102,9 +108,12 @@ As the programs were taking a lot of time to convert the data, we decided to use
 ### Data Preprocessing
 
 Before beginning the statistic analysis we needed to clean our datasets. 
-For instance, we erased rows with missings values and we deleted duplicate rows.
+For instance, we erased rows with **missing values** and deleted **duplicate rows**.
 
-To train models, we needed to encode the categorical features. We principally used the **One-Hot Encoding** technique to encode the categorical features in the dataset. This technique converts each category value into a new column and assigns a 1 or 0 (True/False) value to the column.
+More of that, we have done some **feature engineering** to improve the quality of our dataset.
+
+To train models, we needed to encode the categorical features.
+We principally used the **One-Hot Encoding** technique to encode the categorical features in the dataset. This technique converts each category value into a new column and assigns a 1 or 0 (True/False) value to the column.
 
 
 ### Existing Models
@@ -168,10 +177,12 @@ We see that the ranking difference between the players is not important and we c
 To help us with every features presents in the dataset. With this feature we can see the correlation between each features and the target variable.
 ![correlation matrix all](images/correlation_all.png)
 
-## Predicting the winner and the victory status of a game.
+## 🔎Evaluation & Analysis
+
+### Predicting the winner and the victory status of a game using the dataset features
 
 To predict the winner and victory status we tried three strategies in order to see which one had the best accuracy. To do the prediction we used at must 5 out of 16 features : the number of turns in the game, the players ratings, the opening code used and the number of play of this opening. We chose the Random Forest algorithm because it is the best supervised classification algorithm in our opinion.
-The three stratgies were the following : 
+The three strategies were the following : 
 - prediction with opening code feature encoded with binary encoding, 
 - prediction with opening code feature encoded with label encoding, 
 - prediction with only the players ratings and the number of turns in the game.
@@ -180,8 +191,9 @@ In the first strategy we used Binary encoding to use the opening code feature. T
 For the second strategy we used a Label encoding this time of the opening feature. It does not increase the dimensionality of our dataset but it will create a little bias in the algorithm as the label encoding is used for ordered feature and the opening code is not one of this kind. The random forest algorithm give us a 37% accuracy.
 The last strategy was to reduce the number of feature to only the one which are really correlated to the winner and victory status of the game. We found a 35% accuracy.
 
-In conlusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily.
+In conclusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily.
 
+### Predicting the winner
 
 ---
 
