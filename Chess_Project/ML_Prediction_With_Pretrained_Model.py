@@ -106,12 +106,30 @@ def initialize_stockfish():
     engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
     return engine
 
+def initialize_lc0():
+    if sys.platform.startswith("win"):
+        lc0_path = "Chess Engine/lc0/lc0.exe"
+    else :
+        print("Unsupported OS")
+        return None
+    engine = chess.engine.SimpleEngine.popen_uci(lc0_path)
+    return engine
+
 def get_stockfish_evaluations(moves: str, depth: int = 15):
     board = chess.Board()
     evaluations = ""
     for move in moves.split()[:len(moves.split()) // 2]:
         board.push_uci(move)
-        info = engine.analyse(board, chess.engine.Limit(depth=depth))
+        info = sf_engine.analyse(board, chess.engine.Limit(depth=depth))
+        evaluations += str(info["score"].white().score()) + " "
+    return evaluations
+
+def get_lc0_evaluations(moves: str, depth: int = 15):
+    board = chess.Board()
+    evaluations = ""
+    for move in moves.split()[:len(moves.split()) // 2]:
+        board.push_uci(move)
+        info = lc0_engine.analyse(board, chess.engine.Limit(depth=depth))
         evaluations += str(info["score"].white().score()) + " "
     return evaluations
 
@@ -127,7 +145,6 @@ def extract_trends(df):
             df = df.drop(index)
             index +=1
             continue
-
 
         df.at[index, 'avg_eval'] = np.mean(evaluation)
         df.at[index, 'max_eval'] = np.max(evaluation)
@@ -179,7 +196,8 @@ def get_trends_csv():
 
 
 if __name__ == "__main__":
-    engine = initialize_stockfish()
+    sf_engine = initialize_stockfish()
+    lc0_engine = initialize_lc0()
     extract = True
     game_to_extract = 10
     try :
@@ -196,7 +214,8 @@ if __name__ == "__main__":
     if extract :
         get_eval_csv(game_to_extract)
     get_trends_csv()
-    engine.quit()
+    sf_engine.quit()
+    lc0_engine.quit()
 
     # Random Forest Model
     print("Random Forest Model : ")

@@ -5,6 +5,8 @@ numpy
 matplotlib
 seaborn
 scikit-learn
+torch
 tensorflow
 keras
-ngboost
+python-dotenv
+transformers

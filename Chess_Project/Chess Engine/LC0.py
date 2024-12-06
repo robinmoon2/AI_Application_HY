@@ -13,3 +13,6 @@ with chess.engine.SimpleEngine.popen_uci(lc0_path) as engine:
     # Get the best move
     result = engine.play(board, chess.engine.Limit(time=2.0))  # 2 seconds per move
     print("Best move:", result.move)
+
+    info = engine.analyse(board, chess.engine.Limit(time=2.0))
+    print(info)

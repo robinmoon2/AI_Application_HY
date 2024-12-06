@@ -69,6 +69,12 @@ def play_games(number_of_games, time_limit, engine1_path, engine2_path, output_p
         # Save the game result
         game.headers["Result"] = board.result()
         print(f"Game {game_number} finished: {board.result()}")
+        if board.result() == "1-0":
+            print(f"{game.headers['White']} won")
+        elif board.result() == "0-1":
+            print(f"{game.headers['Black']} won")
+        else:
+            print("Draw")
 
         # Add game to collection
         pgn_collection.append(game)
