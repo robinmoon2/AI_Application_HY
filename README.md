@@ -3,11 +3,11 @@
 
 ## 👥 Team
 
-| Name             | School                   | Email                        |
-|------------------|--------------------------|------------------------------|
-| **Théo Hardy**    | ESILV Engineering School | theo.hardy@edu.devinci.fr     |
-| **Gaël Le Mouel** | ESILV Engineering School | gael.lemouel@gmail.com        |
-| **Robin L'hyver** | ESILV Engineering School | robinlhyver@gmail.com         |
+| Name              | School       | Email                         |
+|-------------------|--------------|-------------------------------|
+| **Théo Hardy**    | ESILV Paris  | theo.hardy@edu.devinci.fr     |
+| **Gaël Le Mouel** | ESILV Paris  | gael.lemouel@gmail.com        |
+| **Robin L'hyver** | ESILV Paris  | robinlhyver@gmail.com         |
 
 ---
 
@@ -69,24 +69,34 @@ Elo corresponds to the player's rating, which is a measure of the player's skill
 2300 elo is the minimum rating to be considered a ***master*** in chess. 
 The high quality games in the database might help us to have a more accurate prediction.
 
-The Elite Data Set contains a lot of games in the format of **PGN** [Portable Game Notation (Chess.com)](https://www.chess.com/terms/chess-pgn) files. The PGN format is a standard format for recording chess games. It contains the following information:
-- `Event`: The name of the event or match
-- `Site`: The location of the event
-- `Date`: The data when the game was played
-- `LichessURL` : The URL of the game on Lichess 
-- `Round`: The specific round of the event
-- `White`: The player who played white
-- `Black`: The player who played black
-- `Result`: The result of the game (1-0, 0-1, 1/2-1/2)
-- `WhiteElo`: The Elo rating of the white player
-- `BlackElo`: The Elo rating of the black player
-- `ECO`: The opening code
-- `Opening`: The name of the opening
-- `TimeControl`: The time control of the game
-- `Termination`: The reason the game ended (checkmate, draw, time, etc.)
-- `WhiteRatingDiff`: The change in the white player's rating after the game
-- `BlackRatingDiff`: The change in the black player's rating after the game
-- `Moves`: The moves of the game in standard chess notation
+The Elite Data Set contains games in the format of **PGN** [Portable Game Notation (Chess.com)](https://www.chess.com/terms/chess-pgn) files. 
+The PGN format is a standard format for recording chess games. Here is an example of a PGN file with its features (*text in curly brackets are comments*):
+
+```PGN
+[Event "Rated Blitz game"]    {Event name}
+[Date "2020.02.01"]           {Date of the game}
+[Round "-"]                   {Round of the event (if available)}
+[White "bluepower"]           {White player name}
+[Black "Piratalokoo"]         {Black player name}
+[Result "0-1"]                {Result of the game}
+[WhiteElo "2299"]             {White player Elo}
+[BlackElo "2469"]             {Black player Elo}
+[ECO "A15"]                   {Opening code}
+[Opening "English Opening: Anglo-Indian Defense, King's Indian Formation"]
+[TimeControl "180+0"]         {Time control}
+[UTCDate "2020.02.01"]      
+[UTCTime "00:00:11"]
+[Termination "Normal"]        {Game termination status}
+[WhiteRatingDiff "-3"]        {White player rating change after the game}
+[BlackRatingDiff "+4"]        {Black player rating change after the game}
+
+{All the moves of the game}
+1. Nf3 Nf6 2. c4 g6 3. Nc3 d5 4. cxd5 Nxd5 5. Qb3 Nb6 6. d4 Be6 7. Qd1 c5
+8. dxc5 Qxd1+ 9. Nxd1 Na4 10. Be3 Nd7 11. b4 Bg7 12. Rc1 Bxa2 13. Bd4 e5
+14. Ba1 O-O 15. e4 a5 16. Bb5 Bh6 17. Ne3 axb4 18. Bxd7 f6 19. Bxa4 Rxa4
+20. O-O b3 21. Rc4 Rfa8 22. Ng4 Rxc4 23. Nxh6+ Kg7 24. Ng4 Rxe4 25. Ne3 Rc8
+26. Rc1 Rb4 27. Bb2 Rb5 28. Nd2 Rbxc5 29. Re1 Rc2 30. Nxc2 Rxc2 0-1
+```
 
 A big part of the features provided in the PGN files do not interest us for our analysis.
 **We will mostly focus on the features that we found in the Kaggle dataset.**
@@ -113,16 +123,18 @@ For instance, we erased rows with **missing values** and deleted **duplicate row
 More of that, we have done some **feature engineering** to improve the quality of our dataset.
 
 To train models, we needed to encode the categorical features.
-We principally used the **One-Hot Encoding** technique to encode the categorical features in the dataset. This technique converts each category value into a new column and assigns a 1 or 0 (True/False) value to the column.
+We principally used the **One-Hot Encoding** technique to encode the categorical features in the dataset. 
+This technique converts each category value into a new column and assigns a 1 or 0 (True/False) value to the column.
 
 
 ### Existing Models
 
-Chess is very famous in the AI community, and many models have been developed to predict the best move in a given position such as **AlphaZero** and **Stockfish**. To help us develop our own, we will use these models. (see more : [Chess Engine](Chess_Project/Chess%20Engine))
+Chess is very famous in the AI community, and many models have been developed to predict the best move in a given position such as **AlphaZero** and **Stockfish**. 
+To help us develop our own, we will use these models. (see more : [Chess Engine](Chess_Project/Chess%20Engine))
 
 #### AlphaZero
 
-[AlphaZero (deepmind.google)](https://deepmind.google/discover/blog/alphazero-shedding-new-light-on-chess-shogi-and-go/) is a computer program developed by Google DeepMind in 2017. It uses the same reinforcement learning techniques as **AlphaGo**, but it is also trained on chess.
+[AlphaZero (Deepmind)](https://deepmind.google/discover/blog/alphazero-shedding-new-light-on-chess-shogi-and-go/) is a computer program developed by Google DeepMind in 2017. It uses the same reinforcement learning techniques as **AlphaGo**, but it is also trained on chess.
 AlphaZero is a general-purpose algorithm that can learn to play other games as well. It uses a deep neural network to evaluate positions and select moves.
 
 #### Stockfish
@@ -195,8 +207,64 @@ In conclusion, although the random forest is the best supervised algorithm for c
 
 ### Predicting the winner
 
+### Large Language Models and Chess 
+
+We tried to use **LLM models** to see if they could play chess or predict game outcomes. 
+We first tried using [Google Gemini API](https://aistudio.google.com/apikey) asking it to evaluate the position of a game as Stockfish would have done it. 
+At our surprise, **the model literally told that it was not able to perform good on the task and that we should use a chess engine instead**.
+Let's dive into the subject to see why : 
+
+We took a look at this funny video on YouTube : [Google vs ChatGPT: INSANE CHESS (YouTube, 2023)](https://youtu.be/FojyYKU58cw).
+It shows an example of two LLM models playing chess against each other.
+The Youtuber used the ChatGPT model to play against the Bard model (older version of Gemini).
+The very first moves are not that bad as they are from very common openings. 
+However, the game quickly became... *chaotic*. It started with this move from ChatGPT :
+[![ChatGPT move](images/ChatGPTWeirdMove.png)](https://youtu.be/FojyYKU58cw?t=98)
+*ChatGPT illegal move in this sample game against Bard*
+
+ChatGPT decided to play a pawn backward which is not allowed in chess.
+As the game goes on, the moves are more and more chaotic and the game ends up in a draw by Bard...
+in a very advantageous position for it. The model claimed that the moves were repeated 3 times which was false.
+
+Regarding this game, we could claim that LLMs are not good at playing chess.
+Taking a closer look into the subject and watching more serious videos and papers (see [References](#LLM-and-Chess)), it turns out that we need to consider some other factors.
+LLM models used in the video are "Chat" models that are trained to put the good words in the right order regarding a **context**. 
+These kinds of models can not really "*reason*" about the game and the position of the pieces without a proper context.
+As the chess openings are very famous and very well documented, the models can play the first moves of the game without major problems.
+However, as the game goes on, the models are not able to reason about the very particular position of the game, and they start to make mistakes.
+It is quite understandable as it is estimated there are **around 10<sup>40</sup>** possible legal position in chess board.
+This number grows to 10<sup>120</sup> when considering all the possible positions of the pieces on the board 
+(including the illegal ones that are clearly taken in account by LLMs as we see in the video).
+
+The best way to make LLMs play chess it to give them a **context**. 
+As they are very good at predicting the next word in a sentence, we give them the beginning of a PGN file and ask them to predict the next part of it.
+for instance :
+```PGN
+[White "Garry Kasparov"]
+[Black "Magnus Carlsen"]
+[Result "1/2-1/2"]
+[WhiteElo "2900"]
+[BlackElo "2800"]
+
+1. e4
+```
+Then we ask it to predict the next word.
+
+One of the work that tends to make LLMs very good chess is the one experimented by *Google Deepmind*.
+
 ---
 
 ## References
 - [Complete guide to encoding categorical features](https://kantschants.com/complete-guide-to-encoding-categorical-features)
 - [Elo Rating System in Chess](https://www.chess.com/terms/elo-rating-chess)
+- ### Chess Engines
+  - [Stockfish](https://stockfishchess.org/)
+  - [LCZero](https://lczero.org/)
+  - [AlphaZero: Shedding new light on chess, shogi, and Go (DeepMind, 2018)](https://deepmind.google/discover/blog/alphazero-shedding-new-light-on-chess-shogi-and-go/)
+  - [How do Chess Engines work? Looking at Stockfish and AlphaZero | Oliver Zeigermann (Youtube, 2019)](https://youtu.be/P0jd8AHwjXw)
+- ### LLM and Chess
+  - [Is LLM Chess the FUTURE of the Game or a Total Flop?(YouTube, 2024)](https://youtu.be/vBCZj5Yp_8M)
+  - [Playing chess with large language models (Carlini, 2022)](https://nicholas.carlini.com/writing/2023/chess-llm.html)
+  - [OK, I can partly explain the LLM chess weirdness now (Dynomight, 2024)](https://dynomight.net/more-chess/#parting-thoughts)
+  - [Grandmaster-Level Chess Without Search (Deepmind, 2024)](https://arxiv.org/pdf/2402.04494v1)
+  - [Amortized Planning with Large-Scale Transformers: A Case Study on Chess (Deepmind, 2024)](https://arxiv.org/pdf/2402.04494)

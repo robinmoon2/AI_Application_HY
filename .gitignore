@@ -3,8 +3,9 @@ Old_Project/.ipynb_checkpoints
 /.venv
 /.idea
 *.pgn
-# Specific Network Model for LC0 Chess Engine. See https://lczero.org/play/networks/bestnets/
+# Specific Network Models for LC0 Chess Engine. See https://lczero.org/play/networks/bestnets/
 Chess_Project/Chess Engine/LC0/t3-512x15x16h-distill-swa-2767500.pb.gz
-/Chess_Project/CSV_Output
-
 Chess_Project/Chess Engine/LC0/BT3-768x15x24h-swa-2790000.pb.gz
+
+/Chess_Project/CSV_Output
+Chess_Project/.env

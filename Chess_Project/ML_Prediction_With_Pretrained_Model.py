@@ -215,6 +215,7 @@ if __name__ == "__main__":
         get_eval_csv(game_to_extract)
     get_trends_csv()
     sf_engine.quit()
+    lc0_engine.quit()
 
     # Random Forest Model
     print("Random Forest Model : ")
