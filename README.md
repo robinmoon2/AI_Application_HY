@@ -134,16 +134,18 @@ To help us develop our own, we will use these models. (see more : [Chess Engine]
 
 #### AlphaZero
 
-[AlphaZero (Deepmind)](https://deepmind.google/discover/blog/alphazero-shedding-new-light-on-chess-shogi-and-go/) is a computer program developed by Google DeepMind in 2017. It uses the same reinforcement learning techniques as **AlphaGo**, but it is also trained on chess.
+[AlphaZero (Deepmind)](https://deepmind.google/discover/blog/alphazero-shedding-new-light-on-chess-shogi-and-go/) is a computer program developed by Google DeepMind in 2017.
+It uses the same reinforcement learning techniques as **AlphaGo**, but it is also trained on chess.
 AlphaZero is a general-purpose algorithm that can learn to play other games as well. It uses a deep neural network to evaluate positions and select moves.
 
 #### Stockfish
 
 Stockfish is a free and open-source chess engine developed by Tord Romstad, Marco Costalba, and Joona Kiiski.
-At its beginning in 2008, Stockfish was a chess engine that used the minimax algorithm with alpha-beta pruning to search the game tree. It also used a simple evaluation function to evaluate the positions.
+At its beginning in 2008, Stockfish was a chess engine that used the minimax algorithm with alpha-beta pruning to search the game tree. 
+It also used a simple evaluation function to evaluate the positions.
 The engine was entirely handcrafted, and the evaluation function was based on the knowledge of the game's authors.
 With the introduction of [efficiently updatable neural network (wikipedia)](https://en.wikipedia.org/wiki/Efficiently_updatable_neural_network)
-Stockfish has been able to use a neural network to evaluate the positions [(Remove classical evaluation)](https://github.com/official-stockfish/Stockfish/commit/af110e02ec96cdb46cf84c68252a1da15a902395).
+Stockfish has been able to use a neural network to evaluate the positions.
 
 #### Which one is better ?
 According to google, Alpha zero might be better than Stockfish as this very pretty looking animation shows:
@@ -157,6 +159,7 @@ when CNN used by AlphaZero requires a lot of GPU power.
 
 To compare the two engines, we created a python script that makes the two engines play against each other. The script is available in the [Chess Engine](Chess_Project/Chess%20Engine) folder. 
 It results that running locally with the *"t3-512x15x16h-distill-swa-2767500"* neural network provided by LCZero on its [website](https://lczero.org/play/networks/bestnets/), Stockfish wins almost every time.
+For our models, we will use Stockfish as it is more efficient and easier to run on mid-range computers.
 
 ## 📈 Data Analysis
 
@@ -205,7 +208,9 @@ The last strategy was to reduce the number of feature to only the one which are 
 
 In conclusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily.
 
-### Predicting the winner
+### Predicting the winner only with the early moves, without information about the players.
+
+
 
 ### Large Language Models and Chess 
 
@@ -227,7 +232,7 @@ As the game goes on, the moves are more and more chaotic and the game ends up in
 in a very advantageous position for it. The model claimed that the moves were repeated 3 times which was false.
 
 Regarding this game, we could claim that LLMs are not good at playing chess.
-Taking a closer look into the subject and watching more serious videos and papers (see [References](#LLM-and-Chess)), it turns out that we need to consider some other factors.
+We took a closer look into the subject and watched more serious videos and papers (see [References](#LLM-and-Chess)), it turns out that we need to consider some other factors.
 LLM models used in the video are "Chat" models that are trained to put the good words in the right order regarding a **context**. 
 These kinds of models can not really "*reason*" about the game and the position of the pieces without a proper context.
 As the chess openings are very famous and very well documented, the models can play the first moves of the game without major problems.
@@ -249,22 +254,30 @@ for instance :
 1. e4
 ```
 Then we ask it to predict the next word.
+The advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
 
-One of the work that tends to make LLMs very good chess is the one experimented by *Google Deepmind*.
+One of the works that tends to make LLMs very good chess is the one experimented by *Google Deepmind* 
+in early 2024. 
 
 ---
 
 ## References
+
 - [Complete guide to encoding categorical features](https://kantschants.com/complete-guide-to-encoding-categorical-features)
-- [Elo Rating System in Chess](https://www.chess.com/terms/elo-rating-chess)
+- ### Data Preprocessing (Useful resources about Chess Data)
+  - [Portable Game Notation (Chess.com)](https://www.chess.com/terms/chess-pgn)
+  - [ECO Codes (365Chess.com)](https://www.365chess.com/eco.php)
+  - [Chess Time Controls (Chess.com)](https://www.chess.com/terms/chess-time-controls)
+  - [Elo Rating System in Chess (Chess.com)](https://www.chess.com/terms/elo-rating-chess)
 - ### Chess Engines
   - [Stockfish](https://stockfishchess.org/)
   - [LCZero](https://lczero.org/)
   - [AlphaZero: Shedding new light on chess, shogi, and Go (DeepMind, 2018)](https://deepmind.google/discover/blog/alphazero-shedding-new-light-on-chess-shogi-and-go/)
+  - [Remove classical evaluation (Github, 2023)](https://github.com/official-stockfish/Stockfish/commit/af110e02ec96cdb46cf84c68252a1da15a902395)
   - [How do Chess Engines work? Looking at Stockfish and AlphaZero | Oliver Zeigermann (Youtube, 2019)](https://youtu.be/P0jd8AHwjXw)
 - ### LLM and Chess
   - [Is LLM Chess the FUTURE of the Game or a Total Flop?(YouTube, 2024)](https://youtu.be/vBCZj5Yp_8M)
-  - [Playing chess with large language models (Carlini, 2022)](https://nicholas.carlini.com/writing/2023/chess-llm.html)
+  - [Playing chess with large language models (Carlini, 2023)](https://nicholas.carlini.com/writing/2023/chess-llm.html)
   - [OK, I can partly explain the LLM chess weirdness now (Dynomight, 2024)](https://dynomight.net/more-chess/#parting-thoughts)
   - [Grandmaster-Level Chess Without Search (Deepmind, 2024)](https://arxiv.org/pdf/2402.04494v1)
   - [Amortized Planning with Large-Scale Transformers: A Case Study on Chess (Deepmind, 2024)](https://arxiv.org/pdf/2402.04494)
