@@ -256,8 +256,8 @@ for instance :
 Then we ask it to predict the next word.
 The advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
 
-One of the works that tends to make LLMs very good chess is the one experimented by *Google Deepmind* 
-in early 2024. 
+One of the works that tends to make LLMs very good chess is the one experimented by *Google Deepmind* in early 2024. 
+They us
 
 ---
 

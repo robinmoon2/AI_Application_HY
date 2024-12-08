@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import os
 import time
+from typing import Union
 
 
 from sklearn.model_selection import train_test_split
@@ -14,7 +15,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler,LabelEncoder
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, BaseEnsemble
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn import svm
 
@@ -22,17 +23,17 @@ from sklearn import svm
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def forest_test(X, y):
+## Models
+
+def test_model(X, y, model : Union[BaseEnsemble, svm.SVC] = RandomForestClassifier()):
     X_Train, X_Test, Y_Train, Y_Test = train_test_split(X, y, test_size=0.20, random_state=42)
     start = time.process_time()
-    trained_forest = RandomForestClassifier(class_weight="balanced", random_state=42).fit(X_Train, Y_Train)
+    trained_model = model.fit(X_Train, Y_Train)
     print(f"Training time: {time.process_time() - start:.2f} seconds")
 
-    prediction_forest = trained_forest.predict(X_Test)
+    prediction_forest = trained_model.predict(X_Test)
 
-    # Print confusion matrix and classification report
-    print("Confusion Matrix:")
-    print(confusion_matrix(Y_Test, prediction_forest))
+    # Print classification report
     print("\nClassification Report:")
     print(classification_report(Y_Test, prediction_forest))
 
@@ -44,19 +45,21 @@ def forest_test(X, y):
     plt.ylabel('Actual')
     plt.title('Confusion Matrix')
 
-    # Plot feature importance
-    feature_importance = trained_forest.feature_importances_
-    features = X.columns
-    indices = np.argsort(feature_importance)[::-1]
+    if isinstance(model, RandomForestClassifier) or isinstance(model, GradientBoostingClassifier):
+        # Plot feature importance
+        feature_importance = trained_model.feature_importances_
+        features = X.columns
+        indices = np.argsort(feature_importance)[::-1]
 
-    plt.figure(figsize=(12, 10))
-    plt.title("Feature Importances")
-    plt.bar(range(X.shape[1]), feature_importance[indices], align="center")
-    plt.xticks(range(X.shape[1]), [features[i] for i in indices], rotation=90)
-    plt.xlim([-1, X.shape[1]])
+        plt.figure(figsize=(12, 10))
+        plt.title("Feature Importances")
+        plt.bar(range(X.shape[1]), feature_importance[indices], align="center")
+        plt.xticks(range(X.shape[1]), [features[i] for i in indices], rotation=90)
+        plt.xlim([-1, X.shape[1]])
     plt.show()
 
     print()
+    return classification_report(Y_Test, prediction_forest, output_dict=True)
 
 def gradient_boosting_test(X, y):
     X_Train, X_Test, Y_Train, Y_Test = train_test_split(X, y, test_size=0.20, random_state=42)
@@ -67,8 +70,7 @@ def gradient_boosting_test(X, y):
     prediction_ngb = gbc.predict(X_Test)
 
     # Print confusion matrix and classification report
-    print("Confusion Matrix:")
-    print(confusion_matrix(Y_Test, prediction_ngb))
+
     print("\nClassification Report:")
     print(classification_report(Y_Test, prediction_ngb))
 
@@ -78,6 +80,7 @@ def gradient_boosting_test(X, y):
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Class 0', 'Class 1'], yticklabels=['Class 0', 'Class'])
 
     print()
+    return classification_report(Y_Test, prediction_ngb, output_dict=True)
 
 def support_vector_machine_test(X, y):
     X_Train, X_Test, Y_Train, Y_Test = train_test_split(X, y, test_size=0.20, random_state=42)
@@ -88,12 +91,20 @@ def support_vector_machine_test(X, y):
     prediction_svc = svc.predict(X_Test)
 
     # Print confusion matrix and classification report
-    print("Confusion Matrix:")
-    print(confusion_matrix(Y_Test, prediction_svc))
+
     print("\nClassification Report:")
     print(classification_report(Y_Test, prediction_svc))
 
+    # Plot confusion matrix
+    plt.figure(figsize=(10, 7))
+    cm = confusion_matrix(Y_Test, prediction_svc)
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Class 0', 'Class 1'], yticklabels=['Class 0', 'Class 1'])
+
     print()
+
+    return classification_report(Y_Test, prediction_svc, output_dict=True)
+
+## Engines
 
 def initialize_stockfish():
     if sys.platform.startswith("linux"):
@@ -115,30 +126,42 @@ def initialize_lc0():
     engine = chess.engine.SimpleEngine.popen_uci(lc0_path)
     return engine
 
-def get_stockfish_evaluations(moves: str, depth: int = 15):
+def get_stockfish_evaluations(moves: str, time = 1,depth: int = 15 ):
     board = chess.Board()
     evaluations = ""
-    for move in moves.split()[:len(moves.split()) // 2]:
+    # defining the number of moves to evaluate
+
+    move_to_evaluate = moves.split()
+    # Evaluating the moves
+    for move in move_to_evaluate:
         board.push_uci(move)
-        info = sf_engine.analyse(board, chess.engine.Limit(depth=depth))
+        info = sf_engine.analyse(board, chess.engine.Limit(depth=depth, time=time))
         evaluations += str(info["score"].white().score()) + " "
     return evaluations
 
-def get_lc0_evaluations(moves: str, depth: int = 15):
+def get_lc0_evaluations(moves: str, time = 1,depth: int = 15 ):
     board = chess.Board()
     evaluations = ""
-    for move in moves.split()[:len(moves.split()) // 2]:
+    # defining the number of moves to evaluate
+
+    move_to_evaluate = moves.split()
+    for move in move_to_evaluate:
         board.push_uci(move)
-        info = lc0_engine.analyse(board, chess.engine.Limit(depth=depth))
+        info = lc0_engine.analyse(board, chess.engine.Limit(depth=depth, time=time))
         evaluations += str(info["score"].white().score()) + " "
     return evaluations
 
-def extract_trends(df):
+## Data processing
+
+def extract_trends(df, move_number: int = 10):
     if not df['evaluations'].any():
         return df
     index = 0
     for evaluation in df['evaluations']:
-        evaluation = str(evaluation).split()
+        if move_number>len(str(evaluation).split()):
+            evaluation = str(evaluation).split()[:move_number]
+        else :
+            evaluation = str(evaluation).split()
         try:
             evaluation = [int(e) for e in evaluation]
         except ValueError:
@@ -153,8 +176,12 @@ def extract_trends(df):
         df.at[index, 'eval_variance'] = np.var(evaluation)
         # Rate of change
         rate_diff = np.diff(evaluation)
-        df.at[index, "avg_rate_change"] = np.mean(rate_diff)
-        df.at[index, "max_rate_change"] = np.max(rate_diff)
+        if len(rate_diff) != 0:
+            df.at[index, "avg_rate_change"] = np.mean(rate_diff)
+            df.at[index, "max_rate_change"] = np.max(rate_diff)
+        else :
+            df.at[index, "avg_rate_change"] = 0
+            df.at[index, "max_rate_change"] = 0
         # sign changes
         df.at[index,"sign_changes"] = np.sum(np.diff(np.sign(evaluation))!=0)
         # time in advantage
@@ -165,7 +192,7 @@ def extract_trends(df):
         index+=1
     return df
 
-def get_eval_csv(row_number=10):
+def get_eval_df(row_number: int = 10, stockfish = True, lc0 = False):
     df = pd.read_csv('Data/elite_chess_games_moves.csv').head(row_number)
 
     one_percent = len(df) // 100
@@ -176,30 +203,39 @@ def get_eval_csv(row_number=10):
     evaluation_list = []
     for index, data in df.iterrows():
         moves = data['moves']
-        evaluations = get_stockfish_evaluations(moves)
+        if lc0:
+            evaluations = get_lc0_evaluations(moves)
+        else:
+            evaluations = get_stockfish_evaluations(moves)
         evaluation_list.append(evaluations)
         if (index + 1) % one_percent == 0:
             elapsed_time = time.time() - start_time
             print(f"Processed {index + 1} games in {elapsed_time:.2f} seconds")
     df['evaluations'] = evaluation_list
-    df.to_csv('Data/elite_chess_games_evaluations.csv', index=False)
     print(df['evaluations'])
-    print("done\n Data saved to 'Data/elite_chess_games_evaluations.csv'")
     return df
 
-def get_trends_csv():
-    df = pd.read_csv('Data/elite_chess_games_evaluations_1k_rows.csv')
-    df = extract_trends(df)
-    df.to_csv('Data/elite_chess_games_trends.csv', index=False)
-    print("done\n Data saved to 'Data/elite_chess_games_trends.csv'")
+def get_eval_csv(row_number: int = 10, stockfish = True, lc0 = False):
+    df = get_eval_df(row_number, stockfish, lc0)
+    if lc0:
+        df.to_csv(f'Data/elite_chess_games_evaluations_{row_number}_rows_lc0.csv', index=False)
+    else:
+        df.to_csv(f'Data/elite_chess_games_evaluations_{row_number}_rows_stockfish.csv', index=False)
+    print("Chess engine evaluation saved to CSV")
     return df
 
+def get_trends_from_csv(csv_file:str):
+    evaluation_df = pd.read_csv(csv_file)
+    trend_df = extract_trends(evaluation_df)
+    return trend_df
 
 if __name__ == "__main__":
+    trend_directory = "Data/move_trends"
+
     sf_engine = initialize_stockfish()
     lc0_engine = initialize_lc0()
     extract = True
-    game_to_extract = 10
+    game_to_extract = 100
     try :
         if str(sys.argv[1]).lower() in ["false"]:
             extract = False
@@ -211,42 +247,81 @@ if __name__ == "__main__":
         print("Invalid argument, using default value of 10")
     except IndexError:
         pass
+
+    # Extract evaluations
+
     if extract :
-        get_eval_csv(game_to_extract)
-    get_trends_csv()
+        get_eval_csv(row_number=game_to_extract, stockfish=True, lc0=False)
+        print(" ================================================ ")
     sf_engine.quit()
     lc0_engine.quit()
 
-    # Random Forest Model
-    print("Random Forest Model : ")
-    df = pd.read_csv("Data/elite_chess_games_trends.csv")
-    # Features and labels
-    X = df[["avg_eval", "max_eval", "min_eval", "eval_diff", "eval_variance", "avg_rate_change", "max_rate_change", "sign_changes", "white_advantage_time", "eval_range"]]
-    y = df["winner"]
-    forest_test(X, y)
+    # Extract trends
+    move_number_low = 3
+    move_number_high = 21
+    step = 3
+    if game_to_extract > 10:
+        game_str = str(game_to_extract)
+    else :
+        game_str = "0" + str(game_to_extract)
 
-    # Gradient Boosting Model
-    print("Gradient Boosting Model : ")
-    gradient_boosting_test(X,y)
+    evaluation_file = f"Data/elite_chess_games_evaluations_{game_str}_rows_stockfish.csv"
+    print(f"Extracting trends from {evaluation_file}")
+    for move_number in range(move_number_low, move_number_high, step):
+        print(f"Extracting trends for {move_number} moves")
+        trend_df = get_trends_from_csv(evaluation_file)
+        trend_df.to_csv(f"{trend_directory}/trend_data_{move_number}_moves.csv", index=False)
+        print(f"Data saved to {trend_directory}/trend_data_{move_number}_moves.csv")
+        print(f" ================================================ ")
 
-    # Support Vector Machine Model
-    print("Support Vector Machine Model : ")
-    support_vector_machine_test(X, y)
+    # Test models
+    trend_files = sorted(os.listdir(trend_directory))
+    random_forest_model = RandomForestClassifier(class_weight="balanced", random_state=42)
+    gradient_boosting_model = GradientBoostingClassifier(random_state=42)
+    support_vector_machine_model = svm.SVC(class_weight="balanced", random_state=42)
 
-    # Random Forest Model without draws
-    print("Random Forest Model without draws : ")
-    df = df[df['winner']!=0]
-    X = df[["avg_eval", "max_eval", "min_eval", "eval_diff", "eval_variance", "avg_rate_change", "max_rate_change", "sign_changes", "white_advantage_time", "eval_range"]]
-    y = df["winner"]
-    forest_test(X, y)
+    result_tab = []
+    for file in trend_files:
+        if ".csv" in file:
+            df = pd.read_csv(f"{trend_directory}/{file}")
+            X = df[
+                ["avg_eval", "max_eval", "min_eval", "eval_diff", "eval_variance", "avg_rate_change", "max_rate_change",
+                 "sign_changes", "white_advantage_time", "eval_range"]
+            ]
+            y = df["winner"]
 
-    # Gradient Boosting Model
-    print("Gradient Boosting Model without draws : ")
-    gradient_boosting_test(X, y)
+            print(f"Processing {file} with Random Forest Model")
+            print("...")
+            result = test_model(X, y, model=random_forest_model)
+            result = ["Random Forest", file.split('_')[-2], result["accuracy"], result["macro avg"]["precision"], result["macro avg"]["recall"],
+                      result["macro avg"]["f1-score"], result["weighted avg"]["precision"],
+                      result["weighted avg"]["recall"], result["weighted avg"]["f1-score"]]
 
-    # Support Vector Machine Model
-    print("Support Vector Machine Model without draws : ")
-    support_vector_machine_test(X, y)
+            result_tab.append(result)
+            print(" ================================================ ")
+
+            print(f"Processing {file} with Gradient Boosting Model")
+            print("...")
+            result = test_model(X, y, model=gradient_boosting_model)
+            result = ["Gradient Boosting", file.split('_')[-2], result["accuracy"], result["macro avg"]["precision"], result["macro avg"]["recall"],
+                      result["macro avg"]["f1-score"], result["weighted avg"]["precision"],
+                      result["weighted avg"]["recall"], result["weighted avg"]["f1-score"]]
+            result_tab.append(result)
+            print(" ================================================ ")
+
+            print(f"Processing {file} with Support Vector Machine Model")
+            print("...")
+            result = test_model(X, y, model=support_vector_machine_model)
+            result = ["Support Vector Machine", file.split('_')[-2], result["accuracy"], result["macro avg"]["precision"], result["macro avg"]["recall"],
+                      result["macro avg"]["f1-score"], result["weighted avg"]["precision"],
+                      result["weighted avg"]["recall"], result["weighted avg"]["f1-score"]]
+            result_tab.append(result)
+            print(" ================================================ ")
+
+    result_df = pd.DataFrame(result_tab, columns=["Model","Move_number","Accuracy", "Precision", "Recall", "F1-Score", "Weighted Precision", "Weighted Recall", "Weighted F1-Score"])
+
+    result_df.to_csv("Data/Model_Performances.csv", index=False)
+    print("All done!")
 
 
 

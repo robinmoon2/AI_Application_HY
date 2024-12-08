@@ -4,7 +4,7 @@ import chess.pgn
 import pandas as pd
 import time
 
-NUMBER_OF_GAMES = 100000
+NUMBER_OF_GAMES = 2000000
 MOVE_NO = 10
 
 # Function to determine the winner
