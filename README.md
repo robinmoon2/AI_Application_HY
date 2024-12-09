@@ -229,7 +229,6 @@ Stockfish evaluation is a number between -1000 and 1000. The evaluation is posit
 The draw Margin is the margin that we consider as a draw. If the evaluation is between `-draw_margin` and `draw_margin`, we consider the game as a draw.
 We obtain a **86% accuracy** with a draw margin of 12. The accuracy is very good, therefore we can consider that the **Stockfish evaluation is precise enough for our model**.
 
-
 We needed to do some **feature engineering** (mean, variance, sign_changes, etc...) to extract trends from the stockfish evaluation.
 As we did not want to take into account the end of the game, we took a percentage of the moves from the beginning of the game.
 Once the trends were extracted, we used some simple models from the [scikit-learn](https://scikit-learn.org/) library to predict the winner of the game:
@@ -303,8 +302,6 @@ for instance :
 Then we ask it to predict the next word.
 The advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
 
-One of the works that tends to make LLMs very good chess is the one experimented by *Google Deepmind* in early 2024. 
-They us
 
 ---
 
