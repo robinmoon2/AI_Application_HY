@@ -1,5 +1,5 @@
 # 🎮 Chess and AI
-> **Disclaimer:** This project follows a previous one on student performance, which we found less engaging ([Student performance](Data%20Analysis)).
+> **Disclaimer:** This project follows a previous one on student performance, which we found less engaging ([Student performance](Old_Project)).
 
 ## 👥 Team
 
@@ -109,7 +109,7 @@ As the programs were taking a lot of time to convert the data, we decided to use
 We first extracted 10000 games from the PGN files to test our models and then extracted 1,000,000 games.
 
 - 1M row CSV sample extracted from the PGN files : [1M Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_features-1M_Games.zip)
-- 100k row move list CSV sample extracted from the PGN files : [100k Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_moves.csv)
+- 100k row move list CSV sample extracted from the PGN files : [100k Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_moves_100k_Games.csv)
 
 
 ---
@@ -210,6 +210,64 @@ In conclusion, although the random forest is the best supervised algorithm for c
 
 ### Predicting the winner only with the early moves, without information about the players.
 
+As we saw in the previous sections, the players' ratings and their difference are often the most important features to predict the winner of a game.
+We wanted to go further and see if we could **predict the winner of a game only with the first moves of the game**.
+
+The problem that we had face is that the moves themselves as they are written in our CSV file are not enough to predict the winner of the game.
+We decided to use pretrained models to put some numerical values on the moves.
+[Stockfish](https://stockfishchess.org/) engine is what we used to evaluate the position of the game after each move.
+Stockfish is really powerful. However, even thought we limited the time to evaluate each position, it took a lot of time to evaluate all the games.
+We decided to use a sample of 1500 games to evaluate the moves.
+
+In order to verify the accuracy of Stockfish evaluation, the first thing that we did was to take the last evaluation of the game and compare it to the winner of the game.
+We found that the Stockfish evaluation were very precise. Here are the results :
+
+![Simple Model Result](images/Simple_Model_Result_Stockfish.png)
+*Simple model results with Stockfish evaluation*
+
+Stockfish evaluation is a number between -1000 and 1000. The evaluation is positive when white is winning and negative when black is winning.
+The draw Margin is the margin that we consider as a draw. If the evaluation is between `-draw_margin` and `draw_margin`, we consider the game as a draw.
+We obtain a **86% accuracy** with a draw margin of 12. The accuracy is very good, therefore we can consider that the **Stockfish evaluation is precise enough for our model**.
+
+We needed to do some **feature engineering** (mean, variance, sign_changes, etc...) to extract trends from the stockfish evaluation.
+As we did not want to take into account the end of the game, we took a percentage of the moves from the beginning of the game.
+Once the trends were extracted, we used some simple models from the [scikit-learn](https://scikit-learn.org/) library to predict the winner of the game:
+- **Random Forest**
+- **Gradient Boosting**
+- **Support Vector Machine**
+
+Here are our first results :
+
+![Pretrained model performances](images/Pretrained_Model_Performances.png)
+*Performances of the pretrained models depending on the move ratio taken into account*
+
+What we can say from this graph is : 
+
+- With the **Random Forest** and **Gradient Boosting** models, with 20% of the moves, we have a 50% accuracy. 
+This number increase to 55% with half of the moves and even 70% with 80% of the moves.
+- The **Support Vector Machine** model is not as good as the two others. We think it is because of our class imbalances. 
+Indeed, in our first attempts, we have taken into account the draws in the dataset when it represents less than 10% of our data.
+
+We remove the draws from the dataset and see if the performances of the models increase. Here are the results:
+
+![Pretrained model performances without draws](images/Pretrained_Model_Performances_Drawless.png)
+*Performances of the pretrained models depending on the move ratio taken into account without draws*
+
+- We can see that the **Support Vector Machine** model is not better. Accuracy stay around 50% which we can consider very bad for a binary classification problem.
+- The **Random Forest** and **Gradient Boosting** models are still very good. The accuracy increased to 75% with 80% of the moves taken into account.
+- We can see that the **Gradient Boosting** model has a peak in performance at 30% of the moves.
+We suspected this peak to be due to the inconsistency and the lack of data of our data set.
+
+We decided to extract more evaluation to see if the performances were more consistent.
+Here are the results:
+
+![Pretrained Model Performances on 5000 games dataset](images/Pretrained_Model_Performances_5000_games.png)
+*Performances of the pretrained models depending on the move ratio taken into account on 5000 games*
+
+- We can see that the **performances are more consistent** as the curves are smoother.
+- The performances of the **Random Forest** and **Gradient Boosting** models good but not better than the previous results.
+- The **support vector machine**, however, has a better performance. The accuracy is around 60% with 60% of the moves taken into account.
+We can suppose 
 
 
 ### Large Language Models and Chess 
@@ -224,6 +282,7 @@ It shows an example of two LLM models playing chess against each other.
 The Youtuber used the ChatGPT model to play against the Bard model (older version of Gemini).
 The very first moves are not that bad as they are from very common openings. 
 However, the game quickly became... *chaotic*. It started with this move from ChatGPT :
+
 [![ChatGPT move](images/ChatGPTWeirdMove.png)](https://youtu.be/FojyYKU58cw?t=98)
 *ChatGPT illegal move in this sample game against Bard*
 
@@ -254,14 +313,13 @@ for instance :
 1. e4
 ```
 Then we ask it to predict the next word.
-The advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
+Other advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
 
-One of the works that tends to make LLMs very good chess is the one experimented by *Google Deepmind* 
-in early 2024. 
+We tried to use this technique to make a GPT model predict the winner of a game. We used the Gemini model from Google.
 
 ---
 
-## References
+## 📖References
 
 - [Complete guide to encoding categorical features](https://kantschants.com/complete-guide-to-encoding-categorical-features)
 - ### Data Preprocessing (Useful resources about Chess Data)
@@ -269,6 +327,7 @@ in early 2024.
   - [ECO Codes (365Chess.com)](https://www.365chess.com/eco.php)
   - [Chess Time Controls (Chess.com)](https://www.chess.com/terms/chess-time-controls)
   - [Elo Rating System in Chess (Chess.com)](https://www.chess.com/terms/elo-rating-chess)
+  - [Chess Notation (Chess.com)](https://www.chess.com/terms/chess-notation)
 - ### Chess Engines
   - [Stockfish](https://stockfishchess.org/)
   - [LCZero](https://lczero.org/)
