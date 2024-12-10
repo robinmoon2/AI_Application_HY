@@ -194,19 +194,36 @@ To help us with every features presents in the dataset. With this feature we can
 
 ## 🔎Evaluation & Analysis
 
-### Predicting the winner and the victory status of a game using the dataset features
+### Basic Prediction : Predicting the game winner based basic information of the game
 
-To predict the winner and victory status we tried three strategies in order to see which one had the best accuracy. To do the prediction we used at must 5 out of 16 features : the number of turns in the game, the players ratings, the opening code used and the number of play of this opening. We chose the Random Forest algorithm because it is the best supervised classification algorithm in our opinion.
-The three strategies were the following : 
+Chess winner prediction is usually the first thing someone do when trying AI on a chess dataset. Even though we want to try other thing we will do this type of prediction first to begin our project.  
+On the kaggle dataset we used a Random Forest model to predict the winner (black, white or draw) based on the rankings of the players and the length of the game in terms of turns.  
+The F1 score on accuracy for the Random Forest is 68%. It appears that the model struggle to predict draw result as the F1 score on the draw results is really low, 3% !
+
+### Predicting the winner and the victory status using the opening feature
+
+We wanted to go much further in the prediction of the outcome of a game chess and wanted to predict the victory status (mate, out of time, resign) in addition of the winner.  
+    
+To predict the winner and victory status with the opening feature we tried four strategies in order to see which one had the best accuracy.  
+To do the prediction we used at must 5 out of 16 features : the number of turns in the game, the players ratings, the opening code used and the number of play of this opening. We chose the Random Forest algorithm because it is the best supervised classification algorithm in our opinion.  
+The first three strategies were the following : 
 - prediction with opening code feature encoded with binary encoding, 
 - prediction with opening code feature encoded with label encoding, 
-- prediction with only the players ratings and the number of turns in the game.
+- prediction with only the players ratings and the number of turns in the game to compare.
 
-In the first strategy we used Binary encoding to use the opening code feature. This type of encoding allow us to reduce the dimensionality compare to a one-hot encoding but still use a powerful encoding like the on-hot one. We found a 36% accuracy of the Random Forest algorithm.
-For the second strategy we used a Label encoding this time of the opening feature. It does not increase the dimensionality of our dataset but it will create a little bias in the algorithm as the label encoding is used for ordered feature and the opening code is not one of this kind. The random forest algorithm give us a 37% accuracy.
-The last strategy was to reduce the number of feature to only the one which are really correlated to the winner and victory status of the game. We found a 35% accuracy.
+In the first strategy we used Binary encoding to use the opening code feature. This type of encoding allow us to reduce the dimensionality compare to a one-hot encoding but still use a powerful encoding like the one-hot one. We found a 36% accuracy of the Random Forest algorithm.  
+For the second strategy we used a Label encoding this time of the opening feature. It does not increase the dimensionality of our dataset but it will create a little bias in the algorithm as the label encoding is used for ordered feature and the opening code is not one of this kind. The random forest algorithm give us a 37% accuracy.  
+The third strategy was to reduce the number of feature to only the one which are really correlated to the winner and victory status of the game. We found a 36% accuracy.
 
-In conclusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily.
+Even though we did not aim to have the perfect accuracy on our model, we were pretty surprised by the low accuracies found. But we can explain this low accuracy with the fact there is more possible results (7) and some results have more data (black win and white win). We can confirm this with the average weighted variable which is always of 34%. It says to us that from the 7 possible results only 2 are really represented (weighted) in the F1 score, and it might be the only 2 with more than 1000 data (black win and white win).  
+
+If you follow me there were 4 strategies to tried and we only tried 3 so far. The last strategy is based on the work of another [ML project](https://github.com/samiamkhan/4641Project/). This project has a similar goal : predict the game outcome with the opening. But it use a totally different strategy : it does not use a Random Forest but multiple Decision Tree. For each unique n-first moves we make a Decision Tree to predict the game outcome and see the average accuracy of all the Decision Tree.
+We tried this strategy from the 2 first moves to the 10 first moves as all game does not have the same length of opening but the majority of the openings have between 2 and 10 moves. We obtained this accuracy graph.  
+
+![Average Accuracyt](images/average_accuracy_Decision_Tree.png)
+*Average accuracy of all the Decision Tree depending on the n-first moves*
+
+In conclusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily. The Decision Tree strategies have a better result but it is more the result of multiple model rather than one single model.
 
 ### Predicting the winner only with the early moves, without information about the players.
 
