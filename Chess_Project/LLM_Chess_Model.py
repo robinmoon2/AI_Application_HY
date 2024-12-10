@@ -39,7 +39,7 @@ class GeminiChessModel:
                 response = self.chat.send_message(prompt)
                 is_legal = False
                 response_str = response.text.strip()
-                if response.text in legal_moves:
+                if response_str in legal_moves:
                     is_legal = True
                 while not is_legal:
                     response = self.chat.send_message("You have to provide a move in the list \n"+ prompt)
