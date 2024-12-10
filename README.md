@@ -251,43 +251,55 @@ As we did not want to take into account the end of the game, we took a percentag
 Once the trends were extracted, we used some simple models from the [scikit-learn](https://scikit-learn.org/) library to predict the winner of the game:
 - **Random Forest**
 - **Gradient Boosting**
-- **Support Vector Machine**
+- **Support Vector Machine** with a linear kernel
 
 Here are our first results :
 
 ![Pretrained model performances](images/Pretrained_Model_Performances.png)
-*Performances of the pretrained models depending on the move ratio taken into account*
+*Performances of the pretrained models depending on the percentage of the move taken into account*
 
-What we can say from this graph is : 
+Those graphs evidences some points :
+- The **Support Vector Machine** model is properly set up as the prediction accuracy stay below 50%.
+This can also be explained by the fact that in this first attempt, we considered the draws in the dataset, although it 
+represents only 10% of our data. 
+- For our other models, to reach 55% of accuracy, we need to take half of the game into account.
+- The maximum accuracy is around 75% for the **Random Forest** and **Gradient Boosting** models.
+- Our models seem te biased as the curves are clearly not smooth. 
 
-- With the **Random Forest** and **Gradient Boosting** models, with 20% of the moves, we have a 50% accuracy. 
-This number increase to 55% with half of the moves and even 70% with 80% of the moves.
-- The **Support Vector Machine** model is not as good as the two others. We think it is because of our class imbalances. 
-Indeed, in our first attempts, we have taken into account the draws in the dataset when it represents less than 10% of our data.
+After some adjustments such as :
+- **Removing the draws** from the dataset
+- Taking the time to extract **5000 games evaluation** from the PGN files and stockfish to have a more consistent dataset
+- **Scaling the features** to have a better performance
 
-We remove the draws from the dataset and see if the performances of the models increase. Here are the results:
+We obtain the following results:
 
-![Pretrained model performances without draws](images/Pretrained_Model_Performances_Drawless.png)
-*Performances of the pretrained models depending on the move ratio taken into account without draws*
+![Pretrained model performances 5000 drawless](images/Pretrained_Model_Performances_5000_games.png)
+*Performances of the pretrained models depending on the percentage of the move taken into account with adjustments*
 
-- We can see that the **Support Vector Machine** model is not better. Accuracy stay around 50% which we can consider very bad for a binary classification problem.
-- The **Random Forest** and **Gradient Boosting** models are still very good. The accuracy increased to 75% with 80% of the moves taken into account.
-- We can see that the **Gradient Boosting** model has a peak in performance at 30% of the moves.
-We suspected this peak to be due to the inconsistency and the lack of data of our data set.
+Performances seems better :
+- The three models have almost the same accuracy that increases with the number of moves taken into account even though the models are different in their approach. 
 
-We decided to extract more evaluation to see if the performances were more consistent.
-Here are the results:
+- The maximum accuracy is around **78% for the three models** taking 80% of the games into account.
+- The seems to be **more consistent** as the curves are smoother.
+- The **computation time to train the three models is very low** once the evaluations extracted (less than 1 sec for 4000 games).
 
-![Pretrained Model Performances on 5000 games dataset](images/Pretrained_Model_Performances_5000_games.png)
+However, we have to note that removing the draws from the dataset means that the mmodel only have to do a binary classification.
+This means that 50% accuracy is the minimum accuracy that we can have and therefore is not a good performance. 
+Based on this assumption, we can say that our models are not good enough to predict the winner of a game only with the early moves.
+
+With our results, we can say that we can predict the outcome of a game with 60% accuracy with half of the game...
+However, even if we know that our dataset has a game length of 82 moves on average, we don't really know the exact move count of a game in live.
+We would like to know how many moves (in absolute value) we need to predict the outcome of a game with a 60% accuracy.
+
+Here are the results after computation:
+
+![Pretrained Model Performances on 5000 games absolute](images/Pretrained_Model_Performances_absolute.png)
 *Performances of the pretrained models depending on the move ratio taken into account on 5000 games*
 
-- We can see that the **performances are more consistent** as the curves are smoother.
-- The performances of the **Random Forest** and **Gradient Boosting** models good but not better than the previous results.
-- The **support vector machine**, however, has a better performance. The accuracy is around 60% with 60% of the moves taken into account.
-We can suppose 
+We can note that the accuracy seems to have **reached its peak around 85%** for 80 games... Which seems logic as we evaluated the precision of Stockfish evaluation to 86% and the mean game length is 82 moves.
+We can say that we can predict the outcome of a game with 70% accuracy with 40 moves.
 
-
-### Large Language Models and Chess 
+### Large Language Models and Chess
 
 We tried to use **LLM models** to see if they could play chess or predict game outcomes. 
 We first tried using [Google Gemini API](https://aistudio.google.com/apikey) asking it to evaluate the position of a game as Stockfish would have done it. 
@@ -351,6 +363,8 @@ We tried to use this technique to make a GPT model predict the winner of a game.
   - [AlphaZero: Shedding new light on chess, shogi, and Go (DeepMind, 2018)](https://deepmind.google/discover/blog/alphazero-shedding-new-light-on-chess-shogi-and-go/)
   - [Remove classical evaluation (Github, 2023)](https://github.com/official-stockfish/Stockfish/commit/af110e02ec96cdb46cf84c68252a1da15a902395)
   - [How do Chess Engines work? Looking at Stockfish and AlphaZero | Oliver Zeigermann (Youtube, 2019)](https://youtu.be/P0jd8AHwjXw)
+- ### ML Models 
+  - [Gradient Boosting vs Random Forest (Geeksforgeeks.org,2024)](https://www.geeksforgeeks.org/gradient-boosting-vs-random-forest/)
 - ### LLM and Chess
   - [Is LLM Chess the FUTURE of the Game or a Total Flop?(YouTube, 2024)](https://youtu.be/vBCZj5Yp_8M)
   - [Playing chess with large language models (Carlini, 2023)](https://nicholas.carlini.com/writing/2023/chess-llm.html)
