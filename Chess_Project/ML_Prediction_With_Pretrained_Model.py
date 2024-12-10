@@ -314,9 +314,9 @@ if __name__ == "__main__":
 
     # Test models
     trend_files = sorted(os.listdir(trend_directory))
-    random_forest_model = RandomForestClassifier(class_weight=None, random_state=42)
+    random_forest_model = RandomForestClassifier(class_weight="balanced", random_state=42)
     gradient_boosting_model = GradientBoostingClassifier(random_state=42)
-    support_vector_machine_model = svm.SVC(kernel="rbf", random_state=42)
+    support_vector_machine_model = svm.SVC(kernel="linear", random_state=42)
 
     result_tab = []
     for file in trend_files:

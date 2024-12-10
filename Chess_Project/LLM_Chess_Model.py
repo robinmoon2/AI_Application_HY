@@ -27,24 +27,28 @@ class GeminiChessModel:
         return gemini_model
 
     def get_move(self, game: chess.pgn.Game, legal_moves: list):
-        prompt = (f"Here is an incomplete PGN file of a chess game: {game} "
-                  f"Please provide the next move in the format of UCI move with the starting square and ending square."
-                  f"DO NOT provide move in the format of SAN. ALWAYS provide legal moves."
-                  f"Here are the legal moves: {legal_moves}. ONLY CHOOSE an element in the list in order to win the game.")
+        prompt = (f"Here is an incomplete PGN file of a chess game: \n```PGN\n{game}\n```\n"
+                  f"Please provide the next move in the format of UCI move with the starting square and ending square.\n"
+                  f"DO NOT provide move in the format of SAN. ALWAYS provide legal moves.\n"
+                  f"Here are the legal moves: \n{legal_moves}\nONLY CHOOSE an element in the list in order to win the game.")
         print(prompt)
 
-        max_retries = 5
+        max_retries = 6
         for attempt in range(max_retries):
             try:
+                response = self.chat.send_message(prompt)
                 is_legal = False
+                response_str = response.text.strip()
+                if response.text in legal_moves:
+                    is_legal = True
                 while not is_legal:
-                    response = self.chat.send_message(prompt)
+                    response = self.chat.send_message("You have to provide a move in the list \n"+ prompt)
                     print(response.text)
                     response_str = response.text.strip()
-                    move = chess.Move.from_uci(response_str)
-                    if str(move) in legal_moves:
+                    if response_str in legal_moves:
                         is_legal = True
-                return move
+                return chess.Move.from_uci(response_str)
+
             except google.api_core.exceptions.ResourceExhausted as e:
                 if attempt < max_retries - 1:
                     wait_time = 2 ** attempt
@@ -109,6 +113,7 @@ def play_game(stockfish_elo : int =  None, gemini_white : bool = True):
         print("Draw")
 
     engine.quit()
+
     return game
 
 
@@ -135,20 +140,20 @@ def get_legal_moves(board : chess.Board):
 if __name__ == "__main__":
     args = sys.argv
 
-    number_of_games = 10
-    stockfish_elo = 2000
+    number_of_games = 2
+    stockfish_elo = 1500
     if len(args) > 1:
         try:
             number_of_games = int(args[1])
             if number_of_games < 1:
-                raise Exception
-        except:
+                raise ValueError
+        except ValueError:
             print("Invalid arguments. Number of games : 10")
             number_of_games = 10
         if len(args) > 2:
             try:
                 stockfish_elo = int(args[2])
-            except:
+            except (ValueError):
                 print("Invalid argument for Stockfish ELO rating. Using 2000 as default")
                 stockfish_elo = 2000
 
