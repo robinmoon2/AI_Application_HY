@@ -8,7 +8,7 @@ import os
 import time
 from typing import Union
 
-
+from Demos.mmapfile_demo import move_dest
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
@@ -75,6 +75,7 @@ def initialize_stockfish():
         print("Unsupported OS")
         return None
     engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
+    print("Engine initialized")
     return engine
 
 def initialize_lc0():
@@ -84,49 +85,45 @@ def initialize_lc0():
         print("Unsupported OS")
         return None
     engine = chess.engine.SimpleEngine.popen_uci(lc0_path)
+    print("Engine initialized")
     return engine
 
-def get_stockfish_evaluations(moves: str, time :float = 0.5 ):
+def get_evaluations(moves: str, engine : chess.engine.SimpleEngine, time :float = 0.5):
     board = chess.Board()
     evaluations = ""
 
-    move_to_evaluate = moves.split()
+    try :
+        move_to_evaluate = moves.split()
+    except Exception as e:
+        print(e)
+        return evaluations
     # Evaluating the moves
     try :
-
         for move in move_to_evaluate:
             board.push_uci(move)
-            info = sf_engine.analyse(board, chess.engine.Limit(time=time, depth=15))
+            info = engine.analyse(board, chess.engine.Limit(time=time, depth=15))
             evaluations += str(info["score"].white().score()) + " "
     except Exception as e:
         print(e)
     return evaluations
 
-def get_lc0_evaluations(moves: str, time :float = 0.5):
-    board = chess.Board()
-    evaluations = ""
-
-    move_to_evaluate = moves.split()
-    try :
-        for move in move_to_evaluate:
-            board.push_uci(move)
-            info = lc0_engine.analyse(board, chess.engine.Limit(time=time,depth=15))
-            evaluations += str(info["score"].white().score()) + " "
-    except Exception as e:
-        print(e)
-    return evaluations
 
 ## Simple test model
 def simple_model(evaluation_csv : str = "Data/elite_games_evaluations_100_rows_stockfish.csv"):
+    MIN_MARGIN = 10
     MAX_MARGIN = 15
     eval_df= pd.read_csv(evaluation_csv)
     X = eval_df["evaluations"]
     y = eval_df["winner"]
 
-    for draw_margin in range(10, MAX_MARGIN +1):
+    for draw_margin in range(MIN_MARGIN, MAX_MARGIN +1):
         prediction_list = []
         for e in eval_df["evaluations"]:
-            eval_str = e.split()
+            try:
+                eval_str = e.split()
+            except (AttributeError,TypeError):
+                prediction_list.append(0)
+                continue
             index = -1
             while eval_str[index] == "None":
                 index -= 1
@@ -148,13 +145,14 @@ def simple_model(evaluation_csv : str = "Data/elite_games_evaluations_100_rows_s
         print(f"Accuracy with {draw_margin} draw margin: ", accuracy)
     # plot the acuracy function of draw margin
     plt.figure(figsize=(10, 7))
-    plt.plot(range(1, MAX_MARGIN+1), [1 - np.sum(eval_df[f"error_{draw_margin}"]) / len(eval_df) for draw_margin in range(1, MAX_MARGIN+1)], marker="o")
+    plt.plot(range(MIN_MARGIN, MAX_MARGIN+1), [1 - np.sum(eval_df[f"error_{draw_margin}"]) / len(eval_df) for draw_margin in range(MIN_MARGIN, MAX_MARGIN+1)], marker="o")
     plt.xlabel("Draw Margin")
     plt.ylabel("Accuracy")
     plt.title("Accuracy vs Draw Margin")
     plt.show()
 
-    eval_df.to_csv(evaluation_csv + "_prediction", index=False)
+    new_name = evaluation_csv.split(".")[0] + "_predictions.csv"
+    eval_df.to_csv(new_name , index=False)
     print("Data updated in ", evaluation_csv)
 
 
@@ -163,6 +161,7 @@ def simple_model(evaluation_csv : str = "Data/elite_games_evaluations_100_rows_s
 def extract_trends(df_to_extract, move_ratio :float = 0.5, draws: bool = False):
     if not df_to_extract['evaluations'].any():
         return df_to_extract
+    df_to_extract = df_to_extract[df_to_extract['winner'].notna()]
     if not draws:
         returned_df = df_to_extract[df_to_extract['winner'] != 0].reset_index(drop=True)
     else :
@@ -171,7 +170,14 @@ def extract_trends(df_to_extract, move_ratio :float = 0.5, draws: bool = False):
     index = 0
 
     for evaluation in returned_df['evaluations']:
-        evaluation = evaluation.split()
+
+        try :
+            evaluation = evaluation.split()
+        except (AttributeError, TypeError):
+            print("Splitting error at index ", index)
+            returned_df.drop(index, inplace=True)
+            returned_df = returned_df.reset_index(drop=True)
+            continue
         move_to_consider = int(len(evaluation) * move_ratio)
         if move_to_consider == 0:
             move_to_consider = 1
@@ -207,21 +213,29 @@ def extract_trends(df_to_extract, move_ratio :float = 0.5, draws: bool = False):
     return returned_df
 
 def get_eval_df(row_number: int = 10, stockfish = True, lc0 = False):
-    df = pd.read_csv('Data/elite_chess_games_moves.csv').head(row_number)
+    move_df = pd.read_csv('Data/elite_chess_games_moves_100k_Games.csv').head(row_number)
 
-    one_percent = len(df) // 100
+    if lc0:
+        engine = initialize_lc0()
+    elif stockfish:
+        engine = initialize_stockfish()
+    else :
+        print("No engine selected")
+        return move_df
+    if engine is None:
+        print("Engine not initialized")
+        return move_df
+    one_percent = len(move_df) // 100
     if one_percent == 0:
         one_percent = 1
     # Loop through the DataFrame in chunks of 1%
     start_time = time.time()
     evaluation_list = []
-    for index, data in df.iterrows():
+    for index, data in move_df.iterrows():
         try :
             moves = data['moves']
-            if lc0:
-                evaluations = get_lc0_evaluations(moves,time=0.1)
-            else:
-                evaluations = get_stockfish_evaluations(moves,time=0.1)
+
+            evaluations = get_evaluations(moves, engine,time=0.1)
             evaluation_list.append(evaluations)
             if (index + 1) % one_percent == 0:
                 elapsed_time = time.time() - start_time
@@ -229,13 +243,13 @@ def get_eval_df(row_number: int = 10, stockfish = True, lc0 = False):
         except KeyboardInterrupt:
             print("Process interrupted")
             print("Returning the processed data")
-            df = df.iloc[:index]
-            lc0_engine.quit()
-            sf_engine.quit()
+            move_df = move_df.iloc[:index]
+
             break
-    df['evaluations'] = evaluation_list
-    print(df['evaluations'])
-    return df
+    move_df['evaluations'] = evaluation_list
+    print(move_df['evaluations'])
+    engine.quit()
+    return move_df
 
 def get_eval_csv(row_number: int = 10, stockfish = True, lc0 = False):
     df = get_eval_df(row_number, stockfish, lc0)
@@ -254,8 +268,6 @@ def get_trends_from_csv(csv_file:str, move_ratio: float = 0.5):
 if __name__ == "__main__":
     trend_directory = "Data/move_trends"
 
-    sf_engine = initialize_stockfish()
-    lc0_engine = initialize_lc0()
     extract = True
     game_to_extract = 100
     try :
@@ -275,8 +287,7 @@ if __name__ == "__main__":
     if extract :
         get_eval_csv(row_number=game_to_extract, stockfish=True, lc0=False)
         print(" ================================================ ")
-    sf_engine.quit()
-    lc0_engine.quit()
+
     ## TEST MODEL
     simple_model(evaluation_csv=f"Data/elite_chess_games_evaluations_{game_to_extract}_rows_stockfish.csv")
 
@@ -294,6 +305,7 @@ if __name__ == "__main__":
     for move_percent in range(move_percent_low, move_percent_high+1, step):
         move_ratio = move_percent / 100
         print(f"Extracting trends for {move_ratio} moves")
+
         trend_df = get_trends_from_csv(evaluation_file, move_ratio)
         move_number_str = str(int(move_ratio * 100))
         trend_df.to_csv(f"{trend_directory}/trend_data_{move_number_str}_moves.csv", index=False)
@@ -353,8 +365,4 @@ if __name__ == "__main__":
 
     result_df.to_csv("Data/Model_Performances.csv", index=False)
     print("All done!")
-
-
-
-
 

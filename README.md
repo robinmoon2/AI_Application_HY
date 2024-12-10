@@ -109,7 +109,7 @@ As the programs were taking a lot of time to convert the data, we decided to use
 We first extracted 10000 games from the PGN files to test our models and then extracted 1,000,000 games.
 
 - 1M row CSV sample extracted from the PGN files : [1M Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_features-1M_Games.zip)
-- 100k row move list CSV sample extracted from the PGN files : [100k Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_moves.csv)
+- 100k row move list CSV sample extracted from the PGN files : [100k Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_moves_100k_Games.csv)
 
 
 ---
@@ -253,9 +253,22 @@ We remove the draws from the dataset and see if the performances of the models i
 ![Pretrained model performances without draws](images/Pretrained_Model_Performances_Drawless.png)
 *Performances of the pretrained models depending on the move ratio taken into account without draws*
 
-- We can see that the **Support Vector Machine** model is not better. Accuracy stay arround 50% which we can consider very bad for a binary classification problem.
+- We can see that the **Support Vector Machine** model is not better. Accuracy stay around 50% which we can consider very bad for a binary classification problem.
 - The **Random Forest** and **Gradient Boosting** models are still very good. The accuracy increased to 75% with 80% of the moves taken into account.
-- We can see that the **Gradient Boosting** model has a peak in performance at 30% of the moves. It predict the winner of the game with 60% accuracy.
+- We can see that the **Gradient Boosting** model has a peak in performance at 30% of the moves.
+We suspected this peak to be due to the inconsistency and the lack of data of our data set.
+
+We decided to extract more evaluation to see if the performances were more consistent.
+Here are the results:
+
+![Pretrained Model Performances on 5000 games dataset](images/Pretrained_Model_Performances_5000_games.png)
+*Performances of the pretrained models depending on the move ratio taken into account on 5000 games*
+
+- We can see that the **performances are more consistent** as the curves are smoother.
+- The performances of the **Random Forest** and **Gradient Boosting** models good but not better than the previous results.
+- The **support vector machine**, however, has a better performance. The accuracy is around 60% with 60% of the moves taken into account.
+We can suppose 
+
 
 ### Large Language Models and Chess 
 
@@ -300,8 +313,9 @@ for instance :
 1. e4
 ```
 Then we ask it to predict the next word.
-The advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
+Other advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
 
+We tried to use this technique to make a GPT model predict the winner of a game. We used the Gemini model from Google.
 
 ---
 
