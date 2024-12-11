@@ -17,7 +17,6 @@ This project explores the various factors that affect **game outcomes**. Using *
 
 - 🏆 **Predict the winner** of a game based on key factors from the dataset.
 - 🏅**Classify the best opening moves** to increase the chances of winning.
-- ❓**Identify Blunders or Critical Position** to detect the **turning points** of the game.
 - 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
 - 🤖 Evaluate whether the **dataset** and the **models** that we chose are reliable for making accurate predictions using machine learning models.
 - 🚀 **Improve our understanding of AI** and its applications in analyzing chess data.
@@ -106,7 +105,8 @@ The programs use the [python-chess](https://python-chess.readthedocs.io/en/lates
 One of the programs is specifically designed to extract the game move list alongside the outcome of the game from the PGN files. 
 The other extracts other features such as the *players' ratings*, the *opening code*, the *turn number* and the *victory status*.
 As the programs were taking a lot of time to convert the data, we decided to use samples of the data to test our models.
-We first extracted 10000 games from the PGN files to test our models and then extracted 1,000,000 games.
+We first extracted 10,000 games from the PGN files to test our models and then extracted 1,000,000 games.
+At the end, to test our models, we extracted a total of 6,726,641 games from the database.
 
 - 1M row CSV sample extracted from the PGN files : [1M Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_features-1M_Games.zip)
 - 100k row move list CSV sample extracted from the PGN files : [100k Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_moves_100k_Games.csv)

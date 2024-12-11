@@ -326,7 +326,7 @@ if __name__ == "__main__":
         get_eval_csv(row_number=game_to_extract, stockfish=True, lc0=False)
         print(" ================================================ ")
 
-    """## TEST MODEL
+    ## TEST MODEL
     simple_model(evaluation_csv=f"Data/elite_chess_games_evaluations_{game_to_extract}_rows_stockfish.csv")
 
     # Extract trends
@@ -407,9 +407,9 @@ if __name__ == "__main__":
 
     result_df = pd.DataFrame(result_tab, columns=["Model","Move_number","Accuracy", "Precision", "Recall", "F1-Score", "Weighted Precision", "Weighted Recall", "Weighted F1-Score"])
 
-    result_df.to_csv("Data/Model_Performances.csv", index=False)"""
+    result_df.to_csv("Data/Model_Performances.csv", index=False)
 
-    support_vector_machine_model = svm.SVC(kernel="linear",  random_state=42)
+    """ support_vector_machine_model = svm.SVC(kernel="linear",  random_state=42)
 
     df80 = pd.read_csv(f"{trend_directory}/trend_data_80_moves.csv")
     df20 = pd.read_csv(f"{trend_directory}/trend_data_20_moves.csv")
@@ -426,6 +426,6 @@ if __name__ == "__main__":
     y_train = df80["winner"][:int(len(df80)*0.70)]
     y_test = df20["winner"][:-int(len(df80)*0.70)]
     print("inchallah ça marche")
-    model_specific_test(X_train,X_test, y_train,y_test, model=support_vector_machine_model)
+    model_specific_test(X_train,X_test, y_train,y_test, model=support_vector_machine_model)"""
     print("All done!")
 
