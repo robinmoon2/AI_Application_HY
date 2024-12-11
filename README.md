@@ -256,7 +256,7 @@ Initially, we verified the accuracy of Stockfish's evaluations by comparing the 
 
 
 ![Simple Model Result](images/Simple_Model_Result_Stockfish.png)
-*Simple model results with Stockfish evaluation. Draw margin represent the evaluation number below which we considered the game as a draw*
+*Simple model results with Stockfish evaluation on 1500 games. Draw margin represent the evaluation number below which we considered the game as a draw*
 
 We then performed feature engineering to extract trends from the Stockfish evaluations, such as mean, variance, and sign changes. 
 Using these features, we trained several models, including Random Forest, Gradient Boosting, and Support Vector Machine (SVM) with a linear kernel. 
@@ -300,10 +300,10 @@ We would like to determine how many moves (in absolute terms) are needed to pred
 Here are the results after computation:
 
 ![Pretrained Model Performances on 5000 games absolute](images/Pretrained_Model_Performances_absolute.png)
-*Performances of the pretrained models depending on the move ratio taken into account on 5000 games*
+*Performances of the pretrained models depending on the move count considered on 5000 games*
 
-We can note that the accuracy seems to have **reached its peak around 85%** for 80 games... Which seems logic as we evaluated the precision of Stockfish evaluation to 86% and the mean game length is 82 moves.
-We can say that we can predict the outcome of a game with 70% accuracy with 40 moves.
+We can note that the accuracy seems to have **reached its peak around 85%** for 80 moves, which is logical as we evaluated the precision of Stockfish's evaluation to 86% and the mean game length is 82 moves. 
+We can state that we can predict the outcome of a game with 70% accuracy using the first 40 moves.
 
 ### Large Language Models and Chess
 
