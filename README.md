@@ -16,14 +16,15 @@
 This project explores the various factors that affect **game outcomes**. Using **machine learning** techniques, we aim to:
 
 - 🏆 **Predict the winner** of a game based on key factors from the dataset.
-- 🏅**Classify the best opening moves** to increase the chances of winning.
+- 🏅 **Classify the best opening moves** to increase the chances of winning.
 - 📈 Assess the **influences** on game outcomes, including player statistics and game conditions.
 - 🤖 Evaluate whether the **dataset** and the **models** that we chose are reliable for making accurate predictions using machine learning models.
 - 🚀 **Improve our understanding of AI** and its applications in analyzing chess data.
 
 ### Why This Project? 🎯
 
-We are big fans of games and are interested in understanding the factors that contribute to winning. This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
+We are big fans of games and are interested in understanding the factors that contribute to winning.
+This project helps us explore how factors like **player ratings**, **game time**, and **opening moves** influence the outcome of a game.
 As computer science students, we aim to **enhance our knowledge of artificial intelligence** by applying it to real-world data and evaluating how effective the dataset is in making reliable predictions.
 
 
@@ -55,22 +56,21 @@ The Kaggle Data Set contains around **20,000 chess games** with the following fe
 - `opening_name`: Opening name
 - `opening_ply`: move number per opening
 
-The data set comes from the [Lichess](https://lichess.org/) website, which is a free online chess game platform.
-
-After analysing the data, we found that the Kaggle dataset do not contain enough data.
+The data set comes from the [Lichess](https://lichess.org/) a free online chess game platform. 
+Upon analyzing the data, we determined that the Kaggle dataset lacks sufficient data for our needs."
 
 
 ### Elite Data Set
 
-Lichess provides a database of **Every game played on Lichess** on its [webstie](https://database.lichess.org/).
-We decided to use the **Lichess Elite Database** created by a user of the Lichess API. The data set contains all the 2300 elo or more game datas. 
-Elo corresponds to the player's rating, which is a measure of the player's skill level. The higher the Elo, the better the player.
-2300 elo is the minimum rating to be considered a ***master*** in chess. 
-The high quality games in the database might help us to have a more accurate prediction.
+Lichess provides a comprehensive database of every game played on its platform, accessible via its [webstie](https://database.lichess.org/).
+For our project, we opted to use the **Lichess Elite Database**, which is curated by a user of the Lichess API. 
+This dataset includes games played by individuals with an Elo rating of 2300 or higher. 
+The Elo rating is a measure of a player's skill level, with higher values indicating better performance. 
+A rating of 2300 is the minimum required to be considered a master in chess. 
+The high-quality games in this database are expected to enhance the accuracy of our predictions.
 
-The Elite Data Set contains games in the format of **PGN** [Portable Game Notation (Chess.com)](https://www.chess.com/terms/chess-pgn) files. 
-The PGN format is a standard format for recording chess games. Here is an example of a PGN file with its features (*text in curly brackets are comments*):
-
+The Elite Data Set is available in **PGN** [Portable Game Notation (Chess.com)](https://www.chess.com/terms/chess-pgn) format, a standard for recording chess games.
+Below is an example of a PGN file with its features (comments are enclosed in curly brackets):
 ```PGN
 [Event "Rated Blitz game"]    {Event name}
 [Date "2020.02.01"]           {Date of the game}
@@ -97,35 +97,39 @@ The PGN format is a standard format for recording chess games. Here is an exampl
 26. Rc1 Rb4 27. Bb2 Rb5 28. Nd2 Rbxc5 29. Re1 Rc2 30. Nxc2 Rxc2 0-1
 ```
 
-A big part of the features provided in the PGN files do not interest us for our analysis.
-**We will mostly focus on the features that we found in the Kaggle dataset.**
-To use the data set, we first converted the data from the PGN files to a new dataset in CSV format.
-To do this, we used the python programs in the [Elite PGN files](Chess_Project/Elite%20PGN%20files) folder.
-The programs use the [python-chess](https://python-chess.readthedocs.io/en/latest/) library that provides tools to easily read and write PGN files.
-One of the programs is specifically designed to extract the game move list alongside the outcome of the game from the PGN files. 
-The other extracts other features such as the *players' ratings*, the *opening code*, the *turn number* and the *victory status*.
-As the programs were taking a lot of time to convert the data, we decided to use samples of the data to test our models.
-We first extracted 10,000 games from the PGN files to test our models and then extracted 1,000,000 games.
-At the end, to test our models, we extracted a total of 6,726,641 games from the database.
+Many of the characteristics provided in the PGN files are not relevant to our analysis. 
+We will primarily focus on the features found in the Kaggle dataset. 
+To utilize the dataset, we first converted the data from the PGN files to a CSV format. 
+This was achieved using Python programs located in the [Elite PGN files](Chess_Project/Elite%20PGN%20files) folder.
+There programs leverage the [python-chess](https://python-chess.readthedocs.io/en/latest/) library which offers tools for reading and writing PGN files.
+
+One program is specifically designed to extract the game move list along with the game outcome from the PGN files. 
+Another program extracts additional features such as player ratings, opening codes, turn numbers, and victory statuses. 
+Due to the time-consuming nature of data conversion, we initially used samples to test our models. 
+We first extracted 10,000 games from the PGN files, followed by 1,000,000 games. 
+Ultimately, we extracted a total of 6,726,641 games from the database to test our models
 
 - 1M row CSV sample extracted from the PGN files : [1M Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_features-1M_Games.zip)
 - 100k row move list CSV sample extracted from the PGN files : [100k Games Elite Data Set (CSV)](Chess_Project/Data/elite_chess_games_moves_100k_Games.csv)
-
 
 ---
 
 ## 🔬 Methodology
 ### Data Preprocessing
 
-Before beginning the statistic analysis we needed to clean our datasets. 
-For instance, we erased rows with **missing values** and deleted **duplicate rows**.
+
+Before starting creating a model, we needed to preprocess the data to make it suitable for our models.
+We analysed it to see what informations we could extract from it and what we could do to improve the quality its quality
+(see more : [Data analysis](#-Data-Analysis)).
+For instance, we erased rows with **missing values** and deleted **duplicated rows**.
 
 More of that, we have done some **feature engineering** to improve the quality of our dataset.
 
 To train models, we needed to encode the categorical features.
 We principally used the **One-Hot Encoding** technique to encode the categorical features in the dataset. 
 This technique converts each category value into a new column and assigns a 1 or 0 (True/False) value to the column.
-
+We also used **Label Encoding** to encode the opening code feature.
+This technique converts each category value into a unique number.
 
 ### Existing Models
 
@@ -163,34 +167,50 @@ For our models, we will use Stockfish as it is more efficient and easier to run 
 
 ## 📈 Data Analysis
 
-### Important Features :
+In order to have a better understanding of our datasets, we started by analysing them by using some python visualisation tools.
+We used [**pandas**](https://pandas.pydata.org/) library with along with  the [**seaborn**](https://seaborn.pydata.org/) library to plot the data
+Here are some information that we extracted from the datasets:
+- ### Kaggle Dataset : 
+  - [Full analysis notebook](Chess_Project/KaggleDataAnalysis.ipynb)
+  - Sample of around **20000 games**.
+  - **1/5 of the games are not rated**. 
+  - **Draws represents less than 5% of the games**.
+  - **Ranking**: 
+    - Black and White rating are mostly the same and is between **784 and 2723**
+    - **Mean ELO** is around 1550 ELO which corresponds to the level of an average player.
 
-#### Turns : 
+    | Black ELO (White is almost the same)                                         | ELO difference                                                                   |
+    |------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+    | ![rating distribution](images/black_rating.png)<br/>*Black Elo Distribution* | ![rating distrib](images/rating_difference.png)<br/>*ELO difference ditribution* |
+  - Average game length is around **60 moves**
+- ### Elite Dataset :
+  - This data set comes from the **same source as the Kaggle dataset** but contains more games ONLY from the best players (**2200 ELO or more**).
+  - [Full analysis notebook](Chess_Project/EliteDataAnalysis.ipynb)
+  - Sample of around **6,5 Millions games**.
+  - All the games are rated
+  - **Draws represents 10% of the games**.
+- **Ranking**: 
+    - Black and White rating are mostly the same and is between **2300 and 3200**
+    - **Mean ELO** is around 1550 ELO which corresponds to the level of an average player.
 
-This feature shows us the number of turns in the game. It is a good indicator of the game length. This feature will be useful for the project and for the learning model that we will use.
+    | White ELO (Black is almost the same)                                                 | ELO difference                                                 |
+    |--------------------------------------------------------------------------------------|----------------------------------------------------------------|
+    | ![rating distribution](images/white_rating_elite.png)<br/>White rating distribution. | ![rating difference elite](images/rating_difference_elite.png)<br/>*ELO difference ditribution* |
+  - Average game length is around **82 moves**
+  - **Note**: High ELO player likes to play very short games even though the average game length is higher than the Kaggle dataset. They play faster.
 
-![turns distribution](images/turns_distribution.png)
+### correlation matrices
 
-We can see a pin around 50 turns . This is normal because the average game length is around 40 turns. Then we have some extra values that are higher than 100 turns. 
+To help us with every features presents in the dataset. With this feature we can see the correlation between each feature for the two datasets :
+- **Kaggle Dataset**:
+  ![correlation matrix all](images/correlation_all.png)
+  * correlation matrix of all the features in the Kaggle dataset
+- **Elite Dataset**:
+  In this data set, we used Hot-one encoding to encode the categorical features with PCA for the more than 300 openings.
+  ![correlation matrix elite](images/correlation_all_elite.png)
+    * correlation matrix of all the features in the Elite dataset
 
-
-#### Ranking : 
-
-The rank of each player is important, it tells us the difference of level between 2 players and there knowledge of the game.
-
-We can see that the white and black rating are the same :
-
-| white_rating | black_rating | raking difference |
-|--------------|--------------|-------------------|
-![rating distribution](images/white_rating.png)|![rating distribution](images/black_rating.png)|![rating distrib](images/rating_difference.png)
-
-We see that the ranking difference between the players is not important and we can assume that the players have the same levels.
-
-
-#### correlation matrix
-
-To help us with every features presents in the dataset. With this feature we can see the correlation between each features and the target variable.
-![correlation matrix all](images/correlation_all.png)
+Those matrices show us that the most useful features to predict the winner of a game are the players ratings.
 
 ## 🔎Evaluation & Analysis
 
@@ -202,8 +222,8 @@ The F1 score on accuracy for the Random Forest is 68%. It appears that the model
 
 ### Predicting the winner and the victory status using the opening feature
 
-We wanted to go much further in the prediction of the outcome of a game chess and wanted to predict the victory status (mate, out of time, resign) in addition of the winner.  
-    
+We aimed to dig deeper into predicting the outcome of a chess game by not only determining the winner but also predicting the victory status (checkmate, out of time, resignation).
+
 To predict the winner and victory status with the opening feature we tried four strategies in order to see which one had the best accuracy.  
 To do the prediction we used at must 5 out of 16 features : the number of turns in the game, the players ratings, the opening code used and the number of play of this opening. We chose the Random Forest algorithm because it is the best supervised classification algorithm in our opinion.  
 The first three strategies were the following : 
@@ -227,33 +247,20 @@ In conclusion, although the random forest is the best supervised algorithm for c
 
 ### Predicting the winner only with the early moves, without information about the players.
 
-As we saw in the previous sections, the players' ratings and their difference are often the most important features to predict the winner of a game.
-We wanted to go further and see if we could **predict the winner of a game only with the first moves of the game**.
+Given the previous sections, we identified that players' ratings and their differences are crucial features for predicting the winner of a chess game. 
+We aimed to explore further by investigating whether it is possible to predict the winner of a game solely based on the initial moves.
 
-The problem that we had face is that the moves themselves as they are written in our CSV file are not enough to predict the winner of the game.
-We decided to use pretrained models to put some numerical values on the moves.
-[Stockfish](https://stockfishchess.org/) engine is what we used to evaluate the position of the game after each move.
-Stockfish is really powerful. However, even thought we limited the time to evaluate each position, it took a lot of time to evaluate all the games.
-We decided to use a sample of 1500 games to evaluate the moves.
+To achieve this, we utilized [Stockfish](https://stockfishchess.org/) chess engine to evaluate the positions after each move.
+This evaluation provided numerical values representing the game's state, which we used to train our models. 
+Initially, we verified the accuracy of Stockfish's evaluations by comparing the final evaluation of each game to the actual winner, achieving an 86% accuracy.
 
-In order to verify the accuracy of Stockfish evaluation, the first thing that we did was to take the last evaluation of the game and compare it to the winner of the game.
-We found that the Stockfish evaluation were very precise. Here are the results :
 
 ![Simple Model Result](images/Simple_Model_Result_Stockfish.png)
-*Simple model results with Stockfish evaluation*
+*Simple model results with Stockfish evaluation. Draw margin represent the evaluation number below which we considered the game as a draw*
 
-Stockfish evaluation is a number between -1000 and 1000. The evaluation is positive when white is winning and negative when black is winning.
-The draw Margin is the margin that we consider as a draw. If the evaluation is between `-draw_margin` and `draw_margin`, we consider the game as a draw.
-We obtain a **86% accuracy** with a draw margin of 12. The accuracy is very good, therefore we can consider that the **Stockfish evaluation is precise enough for our model**.
-
-We needed to do some **feature engineering** (mean, variance, sign_changes, etc...) to extract trends from the stockfish evaluation.
-As we did not want to take into account the end of the game, we took a percentage of the moves from the beginning of the game.
-Once the trends were extracted, we used some simple models from the [scikit-learn](https://scikit-learn.org/) library to predict the winner of the game:
-- **Random Forest**
-- **Gradient Boosting**
-- **Support Vector Machine** with a linear kernel
-
-Here are our first results :
+We then performed feature engineering to extract trends from the Stockfish evaluations, such as mean, variance, and sign changes. 
+Using these features, we trained several models, including Random Forest, Gradient Boosting, and Support Vector Machine (SVM) with a linear kernel. 
+Our initial results showed that the models could predict the winner with around 75% accuracy when considering 80% of the game moves.
 
 ![Pretrained model performances](images/Pretrained_Model_Performances.png)
 *Performances of the pretrained models depending on the percentage of the move taken into account*
@@ -276,20 +283,19 @@ We obtain the following results:
 ![Pretrained model performances 5000 drawless](images/Pretrained_Model_Performances_5000_games.png)
 *Performances of the pretrained models depending on the percentage of the move taken into account with adjustments*
 
-Performances seems better :
-- The three models have almost the same accuracy that increases with the number of moves taken into account even though the models are different in their approach. 
+Performance seems better:  
+- The three models exhibit similar accuracy, which increases with the number of moves considered, despite their different approaches.  
+- The maximum accuracy is around **78% for all three models** when considering 80% of the game moves.  
+- The results appear to be more consistent as the curves are smoother.  
+- The **computation time to train the three models is very low** once the evaluations are extracted (less than 1 second for 4000 games).  
 
-- The maximum accuracy is around **78% for the three models** taking 80% of the games into account.
-- The seems to be **more consistent** as the curves are smoother.
-- The **computation time to train the three models is very low** once the evaluations extracted (less than 1 sec for 4000 games).
+However, it is important to note that removing the draws from the dataset means the model only needs to perform binary classification.
+This implies that 50% accuracy is the minimum acceptable performance, and therefore, achieving 60% accuracy is not particularly impressive. 
+Based on this, we can conclude that our models are not sufficiently accurate to predict the winner of a game based solely on the early moves. 
 
-However, we have to note that removing the draws from the dataset means that the mmodel only have to do a binary classification.
-This means that 50% accuracy is the minimum accuracy that we can have and therefore is not a good performance. 
-Based on this assumption, we can say that our models are not good enough to predict the winner of a game only with the early moves.
-
-With our results, we can say that we can predict the outcome of a game with 60% accuracy with half of the game...
-However, even if we know that our dataset has a game length of 82 moves on average, we don't really know the exact move count of a game in live.
-We would like to know how many moves (in absolute value) we need to predict the outcome of a game with a 60% accuracy.
+With our results, we can state that we can predict the outcome of a game with 60% accuracy using half of the game moves. 
+However, even though we know that our dataset has an average game length of 82 moves, we do not know the exact number of moves in a live game. 
+We would like to determine how many moves (in absolute terms) are needed to predict the outcome of a game with 60% accuracy.
 
 Here are the results after computation:
 
