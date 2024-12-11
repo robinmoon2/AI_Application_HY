@@ -330,7 +330,7 @@ Below is the loss curve that tell us that the error at the beginning was a bit h
 ![Loss curve CNN](images/loss_curve_cnn.png)
 *Confusion matrix of our CNN model*
 
-### Large Language Models and Chess
+### Extra study : Large Language Models and Chess
 
 We tried to use **LLM models** to see if they could play chess or predict game outcomes. 
 We first tried using [Google Gemini API](https://aistudio.google.com/apikey) asking it to evaluate the position of a game as Stockfish would have done it. 
@@ -375,7 +375,9 @@ for instance :
 Then we ask it to predict the next word.
 Other advantage of this technique is that the model have the complete context of the game as all the moves are given to it.
 
-We tried to use this technique to make a GPT model predict the winner of a game. We used the Gemini model from Google.
+We tried to use this technique to make a GPT model actually being able to play chess. We used the Gemini model from Google.
+We made it play times against Stockfish and LC0. It was never able to win a single game against them even setting up their ELO very low.
+Gemini seems to not be able to play well at chess.
 
 ---
 
