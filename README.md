@@ -305,6 +305,31 @@ Here are the results after computation:
 We can note that the accuracy seems to have **reached its peak around 85%** for 80 moves, which is logical as we evaluated the precision of Stockfish's evaluation to 86% and the mean game length is 82 moves. 
 We can state that we can predict the outcome of a game with 70% accuracy using the first 40 moves.
 
+### Predicting the opening played by a player
+
+To predict the opening played by a player we thought of using another model like a KNN but we found [this project](https://github.com/MathewAaron/chess-opening-prediction) with a CNN model and we thought it would be a good way to try this type of model ! 
+
+We used the kaggle dataset for this part.
+
+We only used the first 6 moves of a game, the name of the opening used and the result of the game. To make the life easy to our model we kept the strategy of the original author which was to restrict the opening name to the base name and not use the variation.  
+We transformed the moves into tensor with a [Large Model sentence transformer](https://huggingface.co/sentence-transformers/paraphrase-MiniLM-L6-v2/discussions) in order to fill the moves into a 1D convolutional network.
+
+The model architecture consists of 5 layers with the following architecture : 
+- 3 layers with each a 1D convolutional layer, a Max-pool layer, a batching normalisation and a ReLU activation layer
+- Fed into a fully connected layer with batching normalization, ReLu activation and a Dopout layer.
+
+After training and testing the model we have an accuracy of 95% !  
+We can see with following confusion matrix that the accuracy reach more 99% when speaking of Scandinavian Defense, King's Pawn Defense and French Defense (2nd most use in the dataset). On the other hand the worst accuracy score has been made on the most used opening in the dataset, the Sicilian Defense.
+
+![Confusion matrix CNN](images/confusion_matrix_cnn.png)
+*Confusion matrix of our CNN model*
+
+
+Below is the loss curve that tell us that the error at the beginning was a bit high but it reduces a lot at the end.
+
+![Loss curve CNN](images/loss_curve_cnn.png)
+*Confusion matrix of our CNN model*
+
 ### Large Language Models and Chess
 
 We tried to use **LLM models** to see if they could play chess or predict game outcomes. 
