@@ -337,7 +337,7 @@ Below is the loss curve that tell us that the error at the beginning was a bit h
 
 See more : [Chess Opening Prediction](Chess_Project/ChessOpeningPrediction.ipynb)
 
-### Large Language Models and Chess
+### Extra Study : Large Language Models and Chess
 
 We tried to use **LLM models** to see if they could play chess or predict game outcomes. 
 We first tried using [Google Gemini API](https://aistudio.google.com/apikey) asking it to evaluate the position of a game as Stockfish would have done it. 
