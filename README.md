@@ -168,7 +168,7 @@ For our models, we will use Stockfish as it is more efficient and easier to run 
 ## 📈 Data Analysis
 
 In order to have a better understanding of our datasets, we started by analysing them by using some python visualisation tools.
-We used [**pandas**](https://pandas.pydata.org/) library with along with  the [**seaborn**](https://seaborn.pydata.org/) library to plot the data
+We used [**pandas**](https://pandas.pydata.org/) library along with  the [**seaborn**](https://seaborn.pydata.org/) library to plot the data
 Here are some information that we extracted from the datasets:
 - ### Kaggle Dataset : 
   - [Full analysis notebook](Chess_Project/KaggleDataAnalysis.ipynb)
@@ -199,7 +199,7 @@ Here are some information that we extracted from the datasets:
   - Average game length is around **82 moves**
   - **Note**: High ELO player likes to play very short games even though the average game length is higher than the Kaggle dataset. They play faster.
 
-### correlation matrices
+### Correlation matrices
 
 To help us with every features presents in the dataset. With this feature we can see the correlation between each feature for the two datasets :
 - **Kaggle Dataset**:
@@ -217,40 +217,42 @@ Those matrices show us that the most useful features to predict the winner of a 
 ### Basic Prediction : Predicting the game winner based basic information of the game
 
 Chess winner prediction is usually the first thing someone do when trying AI on a chess dataset. Even though we want to try other thing we will do this type of prediction first to begin our project.  
-On the kaggle dataset we used a Random Forest model to predict the winner (black, white or draw) based on the rankings of the players and the length of the game in terms of turns.  
-The F1 score on accuracy for the Random Forest is 68%. It appears that the model struggle to predict draw result as the F1 score on the draw results is really low, 3% !
+On the kaggle dataset we used a **Random Forest** model to predict the winner (black, white or draw) based on the rankings of the players and the length of the game in terms of turns.  
+The F1 score on accuracy for the Random Forest is **68%**. It appears that the model struggle to predict draw result as the F1 score on the draw results is really low, 3% !  
+See more : [Basic chess prediction](Chess_Project/BasicMLPrediction.ipynb.ipynb)
 
 ### Predicting the winner and the victory status using the opening feature
 
-We aimed to dig deeper into predicting the outcome of a chess game by not only determining the winner but also predicting the victory status (checkmate, out of time, resignation).
+We aimed to dig deeper into predicting the outcome of a chess game by not only determining the winner but also predicting the **victory status** (checkmate, out of time, resignation).
 
 To predict the winner and victory status with the opening feature we tried four strategies in order to see which one had the best accuracy.  
-To do the prediction we used at must 5 out of 16 features : the number of turns in the game, the players ratings, the opening code used and the number of play of this opening. We chose the Random Forest algorithm because it is the best supervised classification algorithm in our opinion.  
+To do the prediction we used at must 5 out of 16 features : the number of turns in the game, the players ratings, the opening code used and the number of play of this opening. We chose the **Random Forest** algorithm because it is the best supervised classification algorithm in our opinion.  
 The first three strategies were the following : 
-- prediction with opening code feature encoded with binary encoding, 
-- prediction with opening code feature encoded with label encoding, 
-- prediction with only the players ratings and the number of turns in the game to compare.
+- **prediction with opening code feature** encoded with **binary encoding**, 
+- **prediction with opening code feature** encoded with **label encoding**, 
+- prediction with **only the players ratings and the number of turns** in the game to compare.
 
 In the first strategy we used Binary encoding to use the opening code feature. This type of encoding allow us to reduce the dimensionality compare to a one-hot encoding but still use a powerful encoding like the one-hot one. We found a 36% accuracy of the Random Forest algorithm.  
-For the second strategy we used a Label encoding this time of the opening feature. It does not increase the dimensionality of our dataset but it will create a little bias in the algorithm as the label encoding is used for ordered feature and the opening code is not one of this kind. The random forest algorithm give us a 37% accuracy.  
+For the second strategy we used a Label encoding this time of the opening feature. It does not increase the dimensionality of our dataset but it will create a little bias in the algorithm as the label encoding is used for ordered feature and the opening code is not one of this kind. The random forest algorithm gives us a 37% accuracy.  
 The third strategy was to reduce the number of feature to only the one which are really correlated to the winner and victory status of the game. We found a 36% accuracy.
 
 Even though we did not aim to have the perfect accuracy on our model, we were pretty surprised by the low accuracies found. But we can explain this low accuracy with the fact there is more possible results (7) and some results have more data (black win and white win). We can confirm this with the average weighted variable which is always of 34%. It says to us that from the 7 possible results only 2 are really represented (weighted) in the F1 score, and it might be the only 2 with more than 1000 data (black win and white win).  
 
-If you follow me there were 4 strategies to tried and we only tried 3 so far. The last strategy is based on the work of another [ML project](https://github.com/samiamkhan/4641Project/). This project has a similar goal : predict the game outcome with the opening. But it use a totally different strategy : it does not use a Random Forest but multiple Decision Tree. For each unique n-first moves we make a Decision Tree to predict the game outcome and see the average accuracy of all the Decision Tree.
+If you follow me there were 4 strategies to tried and we only tried 3 so far. The last strategy is based on the work of another [ML project](https://github.com/samiamkhan/4641Project/). This project has a similar goal : predict the game outcome with the opening. But it use a totally different strategy : it does not use a Random Forest but **multiple Decision Trees**. For each **unique n-first moves** we make a Decision Tree to predict the game outcome and see the average accuracy of all the Decision Trees.
 We tried this strategy from the 2 first moves to the 10 first moves as all game does not have the same length of opening but the majority of the openings have between 2 and 10 moves. We obtained this accuracy graph.  
 
-![Average Accuracyt](images/average_accuracy_Decision_Tree.png)
+![Average Accuracy](images/average_accuracy_Decision_Tree.png)
 *Average accuracy of all the Decision Tree depending on the n-first moves*
 
-In conclusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily. The Decision Tree strategies have a better result but it is more the result of multiple model rather than one single model.
+In conclusion, although the random forest is the best supervised algorithm for classification problem it appears that it cannot predict the winner and the victory status of the game easily. The Decision Tree strategies have a better result but it is more the result of multiple model rather than one single model.  
+[Advanced Chess prediction](Chess_Project/AdvancedMlPrediction.ipynb)
 
 ### Predicting the winner only with the early moves, without information about the players.
 
 Given the previous sections, we identified that players' ratings and their differences are crucial features for predicting the winner of a chess game. 
 We aimed to explore further by investigating whether it is possible to predict the winner of a game solely based on the initial moves.
 
-To achieve this, we utilized [Stockfish](https://stockfishchess.org/) chess engine to evaluate the positions after each move.
+To achieve this, we used [Stockfish](https://stockfishchess.org/) chess engine to evaluate the positions after each move.
 This evaluation provided numerical values representing the game's state, which we used to train our models. 
 Initially, we verified the accuracy of Stockfish's evaluations by comparing the final evaluation of each game to the actual winner, achieving an 86% accuracy.
 
@@ -307,18 +309,18 @@ We can state that we can predict the outcome of a game with 70% accuracy using t
 
 ### Predicting the opening played by a player
 
-To predict the opening played by a player we thought of using another model like a KNN but we found [this project](https://github.com/MathewAaron/chess-opening-prediction) with a CNN model and we thought it would be a good way to try this type of model ! 
+To predict the opening played by a player we thought of using another model like a KNN but we found [this project](https://github.com/MathewAaron/chess-opening-prediction) with a **CNN model** and we thought it would be a good way to try this type of model ! 
 
 We used the kaggle dataset for this part.
 
-We only used the first 6 moves of a game, the name of the opening used and the result of the game. To make the life easy to our model we kept the strategy of the original author which was to restrict the opening name to the base name and not use the variation.  
-We transformed the moves into tensor with a [Large Model sentence transformer](https://huggingface.co/sentence-transformers/paraphrase-MiniLM-L6-v2/discussions) in order to fill the moves into a 1D convolutional network.
+We only used the first 6 moves of a game, the name of the opening used and the result of the game. To make the life easy to our model we kept the strategy of the original author which was to restrict the opening name to the **base name and not use the variation**.  
+We transformed the moves into tensor with a [Large Model sentence transformer](https://huggingface.co/sentence-transformers/paraphrase-MiniLM-L6-v2/discussions) in order to fill the moves into a **1D convolutional network**.
 
 The model architecture consists of 5 layers with the following architecture : 
-- 3 layers with each a 1D convolutional layer, a Max-pool layer, a batching normalisation and a ReLU activation layer
-- Fed into a fully connected layer with batching normalization, ReLu activation and a Dopout layer.
+- 3 layers with each **a 1D convolutional layer, a Max-pool layer, a batching normalisation and a ReLU activation layer**
+- Fed into a fully connected layer with **batching normalization, ReLu activation and a Dropout layer**.
 
-After training and testing the model we have an accuracy of 95% !  
+After training and testing the model we have an accuracy of **95%** !  
 We can see with following confusion matrix that the accuracy reach more 99% when speaking of Scandinavian Defense, King's Pawn Defense and French Defense (2nd most use in the dataset). On the other hand the worst accuracy score has been made on the most used opening in the dataset, the Sicilian Defense.
 
 ![Confusion matrix CNN](images/confusion_matrix_cnn.png)
@@ -329,6 +331,8 @@ Below is the loss curve that tell us that the error at the beginning was a bit h
 
 ![Loss curve CNN](images/loss_curve_cnn.png)
 *Confusion matrix of our CNN model*
+
+See more : [Chess Opening Prediction](Chess_Project/ChessOpeningPrediction.ipynb)
 
 ### Large Language Models and Chess
 
@@ -381,13 +385,14 @@ We tried to use this technique to make a GPT model predict the winner of a game.
 
 ## 📖References
 
-- [Complete guide to encoding categorical features](https://kantschants.com/complete-guide-to-encoding-categorical-features)
-- ### Data Preprocessing (Useful resources about Chess Data)
+- ### Data Preprocessing (Useful resources about Chess Data)  
+  - [Complete guide to encoding categorical features](https://kantschants.com/complete-guide-to-encoding-categorical-features)
   - [Portable Game Notation (Chess.com)](https://www.chess.com/terms/chess-pgn)
   - [ECO Codes (365Chess.com)](https://www.365chess.com/eco.php)
   - [Chess Time Controls (Chess.com)](https://www.chess.com/terms/chess-time-controls)
   - [Elo Rating System in Chess (Chess.com)](https://www.chess.com/terms/elo-rating-chess)
   - [Chess Notation (Chess.com)](https://www.chess.com/terms/chess-notation)
+  - [Large Model Sentence Transformer (Huggingface.co)](https://huggingface.co/sentence-transformers/paraphrase-MiniLM-L6-v2/discussions)
 - ### Chess Engines
   - [Stockfish](https://stockfishchess.org/)
   - [LCZero](https://lczero.org/)
@@ -396,6 +401,8 @@ We tried to use this technique to make a GPT model predict the winner of a game.
   - [How do Chess Engines work? Looking at Stockfish and AlphaZero | Oliver Zeigermann (Youtube, 2019)](https://youtu.be/P0jd8AHwjXw)
 - ### ML Models 
   - [Gradient Boosting vs Random Forest (Geeksforgeeks.org,2024)](https://www.geeksforgeeks.org/gradient-boosting-vs-random-forest/)
+  - [Multiple Decision Tree on each Chess Opening for Game Outcome Prediction (Github.com, 2020)](https://github.com/samiamkhan/4641Project/)
+  - [CHess Opening Prediction with CNN (Github.com, 2022)](https://github.com/MathewAaron/chess-opening-prediction)
 - ### LLM and Chess
   - [Is LLM Chess the FUTURE of the Game or a Total Flop?(YouTube, 2024)](https://youtu.be/vBCZj5Yp_8M)
   - [Playing chess with large language models (Carlini, 2023)](https://nicholas.carlini.com/writing/2023/chess-llm.html)
