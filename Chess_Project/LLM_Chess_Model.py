@@ -31,7 +31,6 @@ class GeminiChessModel:
                   f"Please provide the next move in the format of UCI move with the starting square and ending square.\n"
                   f"DO NOT provide move in the format of SAN. ALWAYS provide legal moves.\n"
                   f"Here are the legal moves: \n{legal_moves}\nONLY CHOOSE an element in the list in order to win the game.")
-        print(prompt)
 
         max_retries = 6
         for attempt in range(max_retries):
@@ -42,6 +41,7 @@ class GeminiChessModel:
                 if response_str in legal_moves:
                     is_legal = True
                 while not is_legal:
+                    print("not legal move")
                     response = self.chat.send_message("You have to provide a move in the list \n"+ prompt)
                     print(response.text)
                     response_str = response.text.strip()
@@ -71,8 +71,19 @@ def initialize_stockfish(elo_rating : int=None):
         engine.configure({"UCI_LimitStrength": True, "UCI_Elo": elo_rating})
     return engine
 
+def initialize_lc0():
+    if sys.platform.startswith("win"):
+        lc0_path = "Chess Engine/lc0/lc0.exe"
+    else :
+        print("Unsupported OS")
+        return None
+    engine = chess.engine.SimpleEngine.popen_uci(lc0_path)
+    print("Engine initialized")
+    return engine
+
 def play_game(stockfish_elo : int =  None, gemini_white : bool = True):
-    engine = initialize_stockfish(stockfish_elo)
+    # engine = initialize_stockfish()
+    engine = initialize_lc0()
     gemini_model = GeminiChessModel(model="gemini-1.5-flash")
     if engine is None:
         return
@@ -82,7 +93,7 @@ def play_game(stockfish_elo : int =  None, gemini_white : bool = True):
     game.headers["Event"] = "Stockfish vs Gemini"
     game.headers["White"] = "Gemini" if gemini_white else "Stockfish"
     game.headers["Black"] = "Stockfish" if gemini_white else "Gemini"
-    game.headers["WhiteELO"] = str(stockfish_elo) if not gemini_white and not stockfish_elo else "2900"
+    game.headers["WhiteELO"] = str(stockfish_elo) if gemini_white and stockfish_elo else "2900"
     game.headers["BlackELO"] = str(stockfish_elo) if gemini_white and stockfish_elo else "2900"
 
     node = game
@@ -111,9 +122,7 @@ def play_game(stockfish_elo : int =  None, gemini_white : bool = True):
         print(f"{game.headers['Black']} won")
     else:
         print("Draw")
-
     engine.quit()
-
     return game
 
 
